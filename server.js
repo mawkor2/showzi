@@ -16,11 +16,6 @@ app.get('/', function(req, res){
         pageTitle: 'showzi'
     })
 });
-app.get(/\/widget\/(*)\.jade/, function(req, res){
-    res.render(req.params[0], {
-        pageTitle: req.params[0] + "_render"
-    })
-});
 app.get('/widget/js/*.js', function(req, res){
     console.log(req);
     res.sendfile('.'+ req.url);
