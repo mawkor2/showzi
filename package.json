@@ -6,10 +6,10 @@
 
   },
   "engines": {
-    "node": "*",
+    "node": "0.4.7",
   },
   "dependencies": {
     "express": "*",
-    "jade": "*"
+    "jade": "0.10.7"
   }
 }
