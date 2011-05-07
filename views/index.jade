@@ -2,11 +2,13 @@
 html(lang="en")
   head
     meta(name='viewport', content='initial-scale\=1.0, user-scalable\=no') 
+    meta(name='description', content='Event finder for local events with map and directions')
+    meta(name='keywords', content='events,concerts,local,map,directions,tickets,videos,mp3s')
     title= pageTitle
     style
       \#map_canvas { height: 100%; float: left; width: 568px; }
        html { height: 100%; font-size: 10px; font-family: verdana; }
-       body { height: 100%; margin: 0px; padding: 0px; width: 768px; background-color: #eeeeee; }
+       body { margin: 0 auto; height: 100%; margin: 0px; padding: 0px; width: 768px; background-color: #eeeeee; }
       .eventful-badge, .eventful-badge * { margin: 0; padding: 0; border: 0; text-align: center;  font-family: Arial; text-decoration: none;}
       .eventful-large { position: relative; width: 140px; font-size: 15px; line-height: 17px; font-weight: bold;}
       .eventful-medium { position: relative; width: 100px; font-size: 12px; line-height: 13px; }                     
@@ -35,6 +37,15 @@ html(lang="en")
       \#event_list { height: 545px; overflow-y: scroll; border-top: 1px solid #ccc;  border-bottom: 1px solid #ccc;}
       \#downloadProgress { opacity: 0; width: 194px; margin: 0 4px 0 2px;}
     script(src='http://ajax.googleapis.com/ajax/libs/dojo/1.6/dojo/dojo.xd.js',djConfig='parseOnLoad: true')
+    script
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-23186762-1']);
+      _gaq.push(['_trackPageview']);
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
     script(src='http://maps.google.com/maps/api/js?sensor=true')
     script(src='js/map_init.js')
     script(src='js/util.js')

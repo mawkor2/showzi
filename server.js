@@ -13,7 +13,7 @@ app.get('/images/*', function(req, res){
 });
 app.get('/', function(req, res){
     res.render('index', {
-        pageTitle: 'showzi'
+        pageTitle: 'Showzi - Find events in your area'
     })
 });
 app.get('/widget/js/*.js', function(req, res){
