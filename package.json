@@ -9,7 +9,7 @@
     "node": "0.4.7",
   },
   "dependencies": {
-    "express": "*",
+    "express": "2.3.3",
     "jade": "0.10.7"
   }
 }
