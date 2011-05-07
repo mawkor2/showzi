@@ -37,19 +37,18 @@ html(lang="en")
       \#event_list { height: 545px; overflow-y: scroll; border-top: 1px solid #ccc;  border-bottom: 1px solid #ccc;}
       \#downloadProgress { opacity: 0; width: 194px; margin: 0 4px 0 2px;}
     script(src='http://ajax.googleapis.com/ajax/libs/dojo/1.6/dojo/dojo.xd.js',djConfig='parseOnLoad: true')
+    script(src='http://maps.google.com/maps/api/js?sensor=true')
+    script(src='js/map_init.js')
+    link(rel='stylesheet',type='text/css',href='http://ajax.googleapis.com/ajax/libs/dojo/1.6/dijit/themes/tundra/tundra.css')
     script
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-23186762-2']);
       _gaq.push(['_trackPageview']);
-
       (function() {
         var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
         ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
-    script(src='http://maps.google.com/maps/api/js?sensor=true')
-    script(src='js/map_init.js')
-    link(rel='stylesheet',type='text/css',href='http://ajax.googleapis.com/ajax/libs/dojo/1.6/dijit/themes/tundra/tundra.css')
   body(class='tundra')
     div#control-container
       div#logo
