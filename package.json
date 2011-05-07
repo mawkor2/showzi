@@ -1,0 +1,15 @@
+{
+  "name": "showzi",
+  "version": "0.0.1",
+  "repository": {},
+  "directories": {
+
+  },
+  "engines": {
+    "node": "*",
+  },
+  "dependencies": {
+    "express": "*",
+    "jade": "*"
+  }
+}
