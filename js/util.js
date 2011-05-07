@@ -34,7 +34,8 @@ dojo.declare('showzi.util.eventful',
       this.searchParams.within = radius || 10;
       var lat = lat || 34.07996230865873;
       var lng = lng || -118.33648681640625;
-      this.searchParams.location = lat + "," + lng; 
+      this.searchParams.location = lat + "," + lng;
+      console.log('setting location to ' + this.searchParams.location); 
     },
     showLoading: function() {
         showzi.util.eventful.loadingToggler.show();
@@ -59,7 +60,8 @@ dojo.declare('showzi.util.eventful',
       this.categoryButton.set({label : categoryName});
       this.categoryButton.set({categoryId : categoryId});
       this.searchParams.c = categoryId;
-      this.searchByCoords();
+      var latLng = showzi.map.getCenter();
+      showzi.util.eventful.searchByCoords(latLng.lat(), latLng.lng());
     },
     searchByCoords: function(lat, lng, radius) {
       this.showLoading();
@@ -144,13 +146,16 @@ showzi.clearEvents = function() {
       showzi.eventMarkers.splice(i, 1);
       // also, cool to use persistent store for their favorites!
     }
-    console.log(showzi.eventMarkers);
   }
 }
 
 showzi.eventMarkers = [];
 
 showzi.putEvents = function(data) {
+  if (!data || !data.events || !data.events.event) {
+    alert('Sorry, no events were found in this area.');
+    return;
+  }
   for (idx in data.events.event) {
     var event = data.events.event[idx];
     var categoryId = showzi.util.eventful.category.id;
@@ -167,7 +172,6 @@ showzi.putEvents = function(data) {
     });
     showzi.eventMarkers.push(marker);
     google.maps.event.addListener(marker, 'click',  function() {
-      console.log(event);
       showzi.loadWidget(event);
     });    
   }
@@ -230,6 +234,7 @@ showzi.util.events = {
       var start_hour = start_time.split(':')[0];
       var start_seconds = start_time.split(':')[1];
       start_date.setHours(start_hour);
+      start_date.setMonth(start_date.getMonth() + 1);
       start_date.setSeconds(start_seconds);
       
       markup.push(['<div class="start_time">', getShortDate(start_date),'</div>'].join(''));
