@@ -115,11 +115,6 @@ dojo.declare('showzi.util.eventful',
   }
 );
 
-dojo.addOnLoad(function() {
-  showzi.util.eventful = new showzi.util.eventful();
-  showzi.util.eventful.searchByCoords();
-  showzi.util.eventful.getCategories();
-});
 
 showzi.buildUrl = function(params) {
   var firstParamDeclared = false;
@@ -229,9 +224,23 @@ showzi.util.events = {
       markup.push(['<div class="icons"><img class="target" src="/images/target.png"><img class="info" src="/images/info.jpg"></div>'].join(''));
       //markup.push(['<div class="description">',event.description,'</div>'].join(''));
       markup.push(['</div><div class="location">',event.city_name,', ',event.region_abbr,'</div>'].join(''));
-      markup.push(['<div class="start_time">',new Date(event.start_time).getShortDate(),'</div>'].join(''));
+      var start_date = new Date(event.start_time.split(' ')[0].replace('-','/'));
+      //console.log('date string is ' + event.start_time.split(' ')[0] + ' from ' + event.start_time);
+      var start_time = event.start_time.split(' ')[1];
+      var start_hour = start_time.split(':')[0];
+      var start_seconds = start_time.split(':')[1];
+      start_date.setHours(start_hour);
+      start_date.setSeconds(start_seconds);
+      
+      markup.push(['<div class="start_time">', getShortDate(start_date),'</div>'].join(''));
       if (event.stop_time && false) {
-        markup.push(['<div class="stop_time">',new Date(event.stop_time).getShortDate(),'</div>'].join(''));
+        var start_date = new Date(event.start_time.split(' ')[0]);
+        var start_time = event.start_time.split(' ')[1];
+        var start_hour = start_time.split(':')[0];
+        var start_seconds = start_time.split(':')[1];
+        start_date.setHours(start_hour);
+        start_date.setSeconds(start_seconds);
+        markup.push(['<div class="stop_time">', getShortDate(stop_date),'</div>'].join(''));
       }
       markup.push(['<div class="venue_name">',event.venue_name,'</div>'].join(''));
       markup.push(['<div class="venue_address">',event.venue_address,'</div>'].join(''));
@@ -257,8 +266,8 @@ watching_count: null
   }
 };
 
-Date.prototype.getShortDate = function(){
-  return this.getMonth() + "/" +  this.getDate() + "/" +  this.getFullYear();
+function getShortDate(date){
+  return date.getMonth() + "/" +  date.getDate() + "/" +  date.getFullYear();
 }
 showzi.loadWidget = function() {
 
