@@ -7,14 +7,14 @@ html(lang="en")
     title= pageTitle
     style
       \#map_canvas { height: 100%; float: left; width: 70%; }
-       html { height: 100%; font-size: 10px; font-family: verdana; }
+       html { height: 100%; font-size: 11px; font-family: "verdana"; }
        body {  margin: 0 auto; height: 100%; padding: 0px; width: 100%; background-color: #eeeeee; }
       .eventful-badge, .eventful-badge * { display: none; margin: 0; padding: 0; border: 0; text-align: center;  font-family: Arial; text-decoration: none;}
       .eventful-large { position: relative; width: 140px; font-size: 15px; line-height: 17px; font-weight: bold;}
       .eventful-medium { position: relative; width: 100px; font-size: 12px; line-height: 13px; }                     
       .eventful-small { position: relative; width: 100px; font-size: 11px; line-height: 11px; }
       .bottom { position: absolute; top: 605px; text-align: center; width: 200px;}
-      \#control-container { width: 30%; height: 100%; float: left; }
+      \#control-container { width: 30%; height: 100%; float: left; position:relative; }
       \#category-list { z-index: 1; }
       \#logo { letter-spacing: 4px; color: #ffca08; width: 100%; text-align: center; font-family: "ppg", impact; position: relative; background-color: #ec6a2c;}
       @font-face {
@@ -44,14 +44,19 @@ html(lang="en")
       \#category-list .dijitButtonNode, #category-list .dijitDropDownButton { width: 100%; margin: 0;} 
       \#category-list .dijitMenu { width: 190px; } 
       .event_item { text-align: right; color: #000000; padding: 7px; border-bottom: 1px dotted #ccc;  cursor: pointer; }
-      .event_item .image { border: 1px solid #ccc; float: left; display: block; width: 48px; height: 48px; }
-      .event_item .title {text-align: left; font-size: 11px; font-weight: bold; clear: right; float: left; margin-left: 9px; margin-top: 2px; width: 65%; }
-      .event_item .icons { margin:0 2px; float: left; }
+      .event_item .image { min-height: 50px; border: 1px solid #ccc; float: left; display: block; width: 48px; height: 48px; margin-right: 9px; }
+      * .event_item .image { height: 50px; }
+      .event_item .title {text-align: left; font-size: 11px; font-weight: bold; margin-left: 9px; margin-top: 2px; width: 90%; }
+      .event_item .icons { margin:0 2px; position:absolute; bottom:3px;right:3px; }
       .event_item .description { }
       .event_item .start_time { }
       .event_item .stop_time { }
       .event_item .target { margin-right: 5px; } 
-      .event_item .image_title { height: 50px; }
+      .event_item .image_title {  position: relative;min-height: 50px; 
+        box-shadow: 2px 2px 2px #888;
+        border: 1px solid #BBB;
+        padding: 5px;
+        margin-bottom: 7px;}
       \#event_list { height: 545px; overflow-y: scroll; border-top: 1px solid #ccc;  border-bottom: 1px solid #ccc;}
       \#downloadProgress { opacity: 0; width: 100%;}
     script(src='http://ajax.googleapis.com/ajax/libs/dojo/1.6/dojo/dojo.xd.js',djConfig='parseOnLoad: true')
@@ -78,6 +83,9 @@ html(lang="en")
           span.z Z
           span.i I
       span#category-list
+      div(style="height:25px;width:100%;")        
+        a(href="http://flattr.com/thing/186274/Showzi",target="_blank",style="position:absolute;top:60px;right:3px;z-index:5;")
+          img(src="http://api.flattr.com/button/flattr-badge-large.png",alt="Flattr this",title="Flattr this",border="0")
       div(dojoType="dijit.ProgressBar",jsId="jsProgress",id="downloadProgress", maximum="10")
       div#event_list
       div#widgetContainer
