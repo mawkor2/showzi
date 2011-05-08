@@ -7,6 +7,7 @@ dojo.require('dojo.fx');
 dojo.require('dijit.Tooltip');
 dojo.require('dojox.NodeList.delegate');
 dojo.require('dijit.Dialog');
+dojo.require('dojox.fx.scroll');
 dojo.declare('showzi.util.eventful',
   null, {
     constructor: function() {
@@ -171,11 +172,16 @@ showzi.putEvents = function(data) {
       }
     });
     showzi.eventMarkers.push(marker);
-    google.maps.event.addListener(marker, 'click',  function() {
-      showzi.loadWidget(event);
-    });    
+    showzi.createMarkerEvent(marker);
   }
   showzi.util.events.list.render();
+}
+
+showzi.createMarkerEvent= function(marker) {
+  google.maps.event.addListener(marker, 'click',  function() {
+    // TODO: probably want to delegate this
+    showzi.loadWidget(marker);
+  }); 
 }
 
 showzi.util.events = {
@@ -216,13 +222,14 @@ showzi.util.events = {
   },
   item: {
     render : function(event, index) {
+      event.list_id = 'event_item_' + index;
       var markup = [];
       markup.push(['<div class="event_item" id="event_item_',index,'"><div class="image_title">'].join(''));
       if (event.image && event.image.small) {
         markup.push(['<img class="image" src="',event.image.small.url,'">'].join(''));
       }
       else {
-        markup.push(['<img class="image" src="/images/fail.jpg">'].join(''));
+        markup.push(['<img class="image" src="/images/no_image.jpg">'].join(''));
       }
       markup.push(['<div class="title">',event.title,'</div>'].join(''));
       markup.push(['<div class="icons"><img class="target" src="/images/target.png"><img class="info" src="/images/info.jpg"></div>'].join(''));
@@ -274,7 +281,21 @@ watching_count: null
 function getShortDate(date){
   return date.getMonth() + "/" +  date.getDate() + "/" +  date.getFullYear();
 }
-showzi.loadWidget = function() {
-
+showzi.loadWidget = function(eventMarker) {
+  var event = eventMarker.event;
+  console.log(event);
+  alert('scrolling to ' + event.list_id);
+  dojo.fx.combine([
+    dojox.fx.smoothScroll({
+      node: dojo.byId(event.list_id),
+      win: dojo.byId('event_list'),
+      duration: 900
+    })],
+    [
+    dojo.fadeOut({
+      node: dojo.byId(event.list_id),
+      duration: 900
+    })]).play();
+  ;
 }
 
