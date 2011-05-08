@@ -11,6 +11,10 @@ app.get('/images/*', function(req, res){
     console.log(req);
     res.sendfile('.'+ req.url);
 });
+app.get('/fonts/*', function(req, res){
+    console.log(req);
+    res.sendfile('.'+ req.url);
+});
 app.get('/', function(req, res){
     res.render('index', {
         pageTitle: 'Showzi - Find events in your area'

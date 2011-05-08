@@ -231,7 +231,7 @@ showzi.util.events = {
       else {
         markup.push(['<img class="image" src="/images/no_image.jpg">'].join(''));
       }
-      markup.push(['<div class="title">',event.title,'</div>'].join(''));
+      markup.push(['<div class="title"><span>',event.title,'</span></div>'].join(''));
       markup.push(['<div class="icons"><img class="target" src="/images/target.png"><img class="info" src="/images/info.jpg"></div>'].join(''));
       //markup.push(['<div class="description">',event.description,'</div>'].join(''));
       markup.push(['</div><div class="location">',event.city_name,', ',event.region_abbr,'</div>'].join(''));

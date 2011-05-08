@@ -6,40 +6,57 @@ html(lang="en")
     meta(name='keywords', content='events,concerts,local,map,directions,tickets,videos,mp3s')
     title= pageTitle
     style
-      \#map_canvas { height: 100%; float: left; width: 568px; }
+      \#map_canvas { height: 100%; float: left; width: 70%; }
        html { height: 100%; font-size: 10px; font-family: verdana; }
-       body {  margin: 0 auto; height: 100%; padding: 0px; width: 768px; background-color: #eeeeee; }
-      .eventful-badge, .eventful-badge * { margin: 0; padding: 0; border: 0; text-align: center;  font-family: Arial; text-decoration: none;}
+       body {  margin: 0 auto; height: 100%; padding: 0px; width: 100%; background-color: #eeeeee; }
+      .eventful-badge, .eventful-badge * { display: none; margin: 0; padding: 0; border: 0; text-align: center;  font-family: Arial; text-decoration: none;}
       .eventful-large { position: relative; width: 140px; font-size: 15px; line-height: 17px; font-weight: bold;}
       .eventful-medium { position: relative; width: 100px; font-size: 12px; line-height: 13px; }                     
       .eventful-small { position: relative; width: 100px; font-size: 11px; line-height: 11px; }
       .bottom { position: absolute; top: 605px; text-align: center; width: 200px;}
-      \#control-container { width: 200px; height: 100%; float: left; }
+      \#control-container { width: 30%; height: 100%; float: left; }
       \#category-list { z-index: 1; }
-      \#logo { letter-spacing: 6px; color: #FA7D16; width: 100%; text-align: center; font-family: impact; position: relative;} 
-      \#logo .s { font-size: 14px;}
-      \#logo .h { font-size: 13px;}
-      \#logo .o { font-size: 13px;}
-      \#logo .w { font-size: 13px;}
-      \#logo .z { font-size: 13px;}
-      \#logo .i { font-size: 14px;}
+      \#logo { letter-spacing: 4px; color: #ffca08; width: 100%; text-align: center; font-family: "ppg", impact; position: relative; background-color: #ec6a2c;}
+      @font-face {
+        font-family: "ppg";
+        src: url(http://127.0.0.1:3000/fonts/phorfeir.ttf) format("truetype");
+      } 
+      @font-face {
+        font-family: "Goonies";
+        src: url(http://127.0.0.1:3000/fonts/Goonies.ttf) format("truetype");
+      } 
+      \#logoContainer {text-align: center;
+          -moz-border-radius-topleft: 10px;
+          border-top-left-radius: 500px 50px;
+          -moz-border-radius-topright: 10px;
+          border-top-right-radius: 500px 50px;
+          background-color: #7e2e25;
+          height: 28px;
+          padding-top: 9px;
+        }
+      \#logo .s { font-size: 21px;}
+      \#logo .h { font-size: 22px;}
+      \#logo .o { font-size: 22px;}
+      \#logo .w { font-size: 22px;}
+      \#logo .z { font-size: 22px;}
+      \#logo .i { font-size: 21px; }
       .linethrough { z-index: -1; position: absolute; top: 9px; height: 36%; width: 67px; background-color: #000000; left: 65px; *left: 64px; } 
-      \#category-list .dijitButtonNode { width: 190px; } 
+      \#category-list .dijitButtonNode, #category-list .dijitDropDownButton { width: 100%; margin: 0;} 
       \#category-list .dijitMenu { width: 190px; } 
       .event_item { text-align: right; color: #000000; padding: 3px; border-bottom: 1px dashed #ccc;  cursor: pointer; }
       .event_item .image { border: 1px solid #ccc; float: left; display: block; width: 48px; height: 48px; }
-      .event_item .title {text-align: left; font-weight: bold; clear: right; float: left; margin-left: 2px; width: 106px; }
-      .evetn_item .icons { width: 15px; margin:0 2px; float: left; }
+      .event_item .title {text-align: left; font-weight: bold; clear: right; float: left; margin-left: 2px; width: 65%; }
+      .event_item .icons { width: 15px; margin:0 2px; float: right; }
       .event_item .description { }
       .event_item .start_time { }
       .event_item .stop_time { }
       .event_item .image_title { height: 50px; }
       \#event_list { height: 545px; overflow-y: scroll; border-top: 1px solid #ccc;  border-bottom: 1px solid #ccc;}
-      \#downloadProgress { opacity: 0; width: 194px; margin: 0 4px 0 2px;}
+      \#downloadProgress { opacity: 0; width: 100%;}
     script(src='http://ajax.googleapis.com/ajax/libs/dojo/1.6/dojo/dojo.xd.js',djConfig='parseOnLoad: true')
     script(src='http://maps.google.com/maps/api/js?sensor=true')
     script(src='js/map_init.js')
-    link(rel='stylesheet',type='text/css',href='http://ajax.googleapis.com/ajax/libs/dojo/1.6/dijit/themes/tundra/tundra.css')
+    link(rel='stylesheet',type='text/css',href='http://ajax.googleapis.com/ajax/libs/dojo/1.6/dijit/themes/soria/soria.css')
     script
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-23186762-2']);
@@ -49,16 +66,16 @@ html(lang="en")
         ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
-  body(class='tundra')
+  body(class='soria')
     div#control-container
       div#logo
-        span.s S
-        span.h H
-        span.o O
-        span.w W
-        span.z Z
-        span.i I
-        div.linethrough
+        div#logoContainer
+          span.s S
+          span.h H
+          span.o O
+          span.w W
+          span.z Z
+          span.i i
       span#category-list
       div(dojoType="dijit.ProgressBar",jsId="jsProgress",id="downloadProgress", maximum="10")
       div#event_list
