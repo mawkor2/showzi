@@ -284,7 +284,6 @@ function getShortDate(date){
 showzi.loadWidget = function(eventMarker) {
   var event = eventMarker.event;
   console.log(event);
-  alert('scrolling to ' + event.list_id);
   dojo.fx.combine([
     dojox.fx.smoothScroll({
       node: dojo.byId(event.list_id),
