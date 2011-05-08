@@ -66,7 +66,21 @@ html(lang="en")
     link(rel='stylesheet',type='text/css',href='http://ajax.googleapis.com/ajax/libs/dojo/1.6/dijit/themes/soria/soria.css')
     script
       var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-23186762-2']);
+      var uaId = "";
+      // flop for different CNAMEs
+      switch(document.domain) {
+        case "showzi.duostack.net":
+          uaId = "UA-23186762-2";
+          break;
+        case "www.showzi.info":
+          uaId = "UA-23186762-3";
+          break;
+        default:
+          // unused domain or dev machine
+          uaId = "UA-23186762-1";
+          break;
+      }
+      _gaq.push(['_setAccount', uaId]);
       _gaq.push(['_trackPageview']);
       (function() {
         var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
