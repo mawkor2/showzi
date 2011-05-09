@@ -54,7 +54,7 @@ function initialize() {
   // Browser doesn't support Geolocation
   } else {
     browserSupportFlag = false;
-    handleNoGeolocation(browserSupportFlag, true, myOptions);
+    positionAcquired(browserSupportFlag, true, myOptions);
   }
   return browserSupportFlag;
 }
