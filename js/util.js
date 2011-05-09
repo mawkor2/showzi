@@ -188,6 +188,16 @@ showzi.util.events = {
   initialized: false, 
   init: function() {
     if (!showzi.util.events.initialized) {
+      var viewport = dijit.getViewport();
+      var viewport_height = viewport.h;
+      var listHeight = (viewport_height - 90) + 'px';
+      dojo.style('event_list', 'height', (viewport_height - 103) + 'px');
+      dojo.connect ( window, 'onresize', function(e){
+        var viewport = dijit.getViewport();
+        var viewport_height = viewport.h;
+        var listHeight = (viewport_height - 90) + 'px';
+        dojo.style('event_list', 'height', (viewport_height - 103) + 'px');
+       } );
       dojo.query('#event_list').delegate('img.info', 'onclick', function(evt) {
         var eventMarkerIdx = dojo.query(evt.target).parents('.event_item')[0].id.split('_')[2];
         new dijit.Dialog({
