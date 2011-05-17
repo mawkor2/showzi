@@ -292,12 +292,12 @@ showzi.util.events = {
     },
     search : function(searchText) {
       for (var eventMarker in showzi.eventMarkers) {
-        var searchRexExp = new RegExp(searchText, "i");
+        searchRexExp = new RegExp(searchText, "i");
         var event = showzi.eventMarkers[eventMarker].event;
-        if ((event.description && event.description.match(searchRexExp)) ||
-          (event.title && event.title.match(searchRexExp)) ||
-          (event.venue_name && event.venue_name.match(searchRexExp)) ||
-          (event.venue_address && event.venue_address.match(searchRexExp))) {
+        if ((event.description && event.description.match(searchText)) ||
+          (event.title && event.title.match(searchText)) ||
+          (event.venue_name && event.venue_name.match(searchText)) ||
+          (event.venue_address && event.venue_address.match(searchText))) {
           event.active = true;
         }
         else {

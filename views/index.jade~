@@ -30,7 +30,7 @@ html(lang="en")
       }     
       .nihilo #control-container .dijitButtonNode {
         color: #fff;
-        background: none;
+        background: nonw;
         background-color: #ccc;
       }
       \#category-list .dijitDropDownButton {  
