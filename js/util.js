@@ -244,7 +244,7 @@ showzi.util.events = {
             }
           },
           onBlur: function(e) {
-            if (e.target && e.target.value === "") {
+            if (e && e.target && e.target.value === "") {
               showzi.util.events.list.activateMarkers();
               showzi.util.events.list.render();
             }
