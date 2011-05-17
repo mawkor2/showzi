@@ -244,7 +244,7 @@ showzi.util.events = {
             }
           },
           onBlur: function(e) {
-            if (e.target.value === "") {
+            if ( e.target && e.target.value === "") {
               showzi.util.events.list.activateMarkers();
               showzi.util.events.list.render();
             }
@@ -292,12 +292,12 @@ showzi.util.events = {
     },
     search : function(searchText) {
       for (var eventMarker in showzi.eventMarkers) {
-        searchRexExp = new RegExp(searchText, "i");
+        var searchRexExp = new RegExp(searchText, "i");
         var event = showzi.eventMarkers[eventMarker].event;
-        if ((event.description && event.description.match(searchText)) ||
-          (event.title && event.title.match(searchText)) ||
-          (event.venue_name && event.venue_name.match(searchText)) ||
-          (event.venue_address && event.venue_address.match(searchText))) {
+        if ((event.description && event.description.match(searchRexExp)) ||
+          (event.title && event.title.match(searchRexExp)) ||
+          (event.venue_name && event.venue_name.match(searchRexExp)) ||
+          (event.venue_address && event.venue_address.match(searchRexExp))) {
           event.active = true;
         }
         else {
