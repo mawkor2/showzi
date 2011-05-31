@@ -33,7 +33,7 @@ app.get('/concertTour/*', function(req, res){
 
 
   }); 
-  */
+  /*
   res.render('concertTour', {
     pageTitle: 'Showzi - Concert and Tour Dates - '
   })
@@ -99,7 +99,7 @@ showzi.services = {
     }
   },
   youtube: {
-    performer: function(params, ) { // qp: pass q 
+    performer: function(params) { // qp: pass q 
       var queryParams = Object.create(params.queryParams, {
         orderby: { value: 'published' },
         "start-index": { value: '1' },
