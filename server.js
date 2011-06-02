@@ -2,7 +2,7 @@ var url = require('url');
 var http = require('http');
 var querystring = require('querystring');
 var app = require('express').createServer();
-var remix = require('../remix/remix');
+var remix = require('/remix/remix');
 var EventEmitter =  require('events').EventEmitter;
 app.set('view engine', 'jade');
 app.set('view options', {
