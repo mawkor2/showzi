@@ -28,7 +28,7 @@ html(lang="en")
       #info_panel img.eventful_main { height: 130px; width: 130px; border: 1px solid #ccc; float: left; margin: 0 7px 3px 0; }
       #info_panel h1 { font-size: 22px;} 
     script
-      function fbs_click() {
+      if (top == self) {
         var urlParts = location.href.split('/');
         var fraggedUrl = '';
         for (var idx = 0; idx < urlParts.length; idx++) {
@@ -39,9 +39,12 @@ html(lang="en")
             fraggedUrl += '#';
           }         
           fraggedUrl += urlParts[idx];
-        }     
-        u=fraggedUrl;
-        t=document.title;
+        }
+        location.href = fraggedUrl;
+      }
+      function fbs_click() {
+        var u = location.href;
+        var t = document.title;
         window.open('http://www.facebook.com/sharer.php?u='+encodeURIComponent(u)+'&t='+encodeURIComponent(t),'sharer','toolbar=0,status=0,width=626,height=436');
         return false;
       }   
