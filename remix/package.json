@@ -1,0 +1,6 @@
+{ "name" : "remix"
+, "version" : "0.0.1"
+, "description" : "json request chaining"
+, "author": "Brandon Hutchinson"
+, "main": "./remix.js"
+}

@@ -1,0 +1,40 @@
+!!! 5
+html(lang="en")
+  head
+    title Tadoo - #{page_title}
+    meta(name='viewport', content='initial-scale\=1.0, user-scalable\=no')
+    meta(name='description', content='Event finder for local events with map and directions - ' + page_title)
+    meta(name='keywords', content='events,concerts,local,map,directions,tickets,videos,mp3s,' + page_keywords)
+    style
+      html {border: 0; padding: 0; margin: 0;}
+      body { font-family: Tahoma; font-size: 13px; border:0; padding: 0; margin: 0;}
+      #info_panel .module { overflow: auto; _display: inline; padding: 3px; }
+      #info_panel .panel2 { float: left; height: 290px;}
+      #info_panel div.youtube {float: right; }
+      #info_panel .eventful_detail { padding: 5px; max-width: 240px; width: auto;}
+      #info_panel .ticket_image {float:right;}
+      #info_panel .youtube_video {text-align:left;height: 280px; padding: 5px; }
+      #info_panel .description {  margin: 5px; }
+      #info_panel .info { margin: 5px; } 
+      #info_panel .eventful { float: left; } 
+      #info_panel #panel2 { overflow: auto;min-width: 662px;}
+      #info_panel h1.info { background-color: #000000; color: #ffffff; margin-top: 0px;
+        -moz-border-radius-bottomright: 10px;
+        border-bottom-right-radius: 15px 20px;
+        -moz-border-radius-topright: 10px;
+        border-top-right-radius: 15px 20px;    
+      }
+      #info_panel .fb_share_link { padding:2px 0 0 20px; height:16px; background:url(http://static.ak.facebook.com/images/share/facebook_share_icon.gif?6:26981) no-repeat top left; }      
+      #info_panel img.eventful_main { height: 130px; width: 130px; border: 1px solid #ccc; float: left; margin: 0 7px 3px 0; }
+      #info_panel h1 { font-size: 22px;} 
+    script
+      function fbs_click() {u=location.href;t=document.title;window.open('http://www.facebook.com/sharer.php?u='+encodeURIComponent(u)+'&t='+encodeURIComponent(t),'sharer','toolbar=0,status=0,width=626,height=436');return false;}   
+  body
+    div#info_panel
+      div.module
+        != partial('_mod_eventful_head', event_data[0].eventful)
+      div#panel2
+        div.panel2.eventful_detail
+          != partial('_mod_eventful_detail', event_data[0].eventful)
+        div.panel2.module.youtube
+        != partial('_mod_youtube', event_data[0].youtube)
