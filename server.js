@@ -1,6 +1,8 @@
 var url = require('url');
 var http = require('http');
+var querystring = require('querystring');
 var app = require('express').createServer();
+var remix = require('../remix/remix');
 var EventEmitter =  require('events').EventEmitter;
 app.set('view engine', 'jade');
 app.set('view options', {
@@ -23,20 +25,111 @@ app.get('/', function(req, res){
     pageTitle: 'Showzi - Find events in your area'
   })
 });
-app.get('/concertTour/*', function(req, res){
-/*
-  var preFetch = new showzi.preFetch(req, function(mashData){
-
-  showzi.prefetch(req, function(mashData) {
-
-
-
-
-  }); 
-  */
-  res.render('concertTour', {
-    pageTitle: 'Showzi - Concert and Tour Dates - '
-  })
+app.get('/concert_tour/', function(req, res){
+  var event_id = querystring.parse(url.parse(req.url).query).id;
+  var config = {
+    eventful: {
+      request: {
+        options: {
+          host: 'api.eventful.com',
+          port: 80,
+          path: '/json/events/get/',
+          query: 'app_key=7pfDQXSvjB7GFm9M&id=' + event_id,
+          method: 'GET'
+        }
+      }
+    },
+    youtube: {
+      request: {
+        options : {
+          host: 'gdata.youtube.com',
+          port: 80,
+          path: '/feeds/api/videos/',
+          method: 'GET'
+        }
+      },
+      futures : {
+        eventful: function (req, data) {
+          var query = {
+            orderby: 'published',
+            'start-index': '1',
+            'max-results': '10',
+            v: '2',
+            alt: 'json',
+            q: ''                        
+          };
+          query.q = '"' + data.title + '"';
+          req.options.query = showzi.buildQuery(query);  
+        }
+      }
+    }
+  };
+  var jj = remix.remix(config);
+  jj.wire();
+  jj.events.on('complete', function(data) {
+    data.youtube.feed.height = '280px';
+    data.youtube.feed.width = '400px';
+    var videoIds = [];
+    for (var idx in data.youtube.feed.entry) {
+      if (idx !== 0) {
+        videoIds.push(data.youtube.feed.entry[idx]['media$group']['yt$videoid']['$t']);
+      }
+    };
+    if (data.eventful.free === 1) {
+      data.eventful.displayPrice = 'FREE!';
+    }
+    else {
+      if (!data.eventful.price) {
+        data.eventful.displayPrice = 'Varies';
+      }
+      else {
+        data.eventful.displayPrice = '$' + data.eventful.price;
+      }
+    }
+    if (!data.eventful.images) {
+      data.eventful.images = { image : {} };
+    }
+    if (!data.eventful.images.image.medium) {
+      data.eventful.images.image.medium = {
+        url: "/images/no_image.jpg"
+      }
+    }
+    if (!data.eventful.start_time) {
+      res.render('fail', {
+        pageTitle: 'Something is bad'
+      });
+      return;
+    }    
+    var start_date = new Date(data.eventful.start_time.split(' ')[0].replace(/-/g,'/'));
+    //console.log('date string is ' + event.start_time.split(' ')[0] + ' from ' + event.start_time);
+    var start_time = data.eventful.start_time.split(' ')[1];
+    var start_hour = start_time.split(':')[0];
+    var start_seconds = start_time.split(':')[1];
+    start_date.setHours(start_hour);
+    start_date.setMonth(start_date.getMonth() + 1);
+    start_date.setSeconds(start_seconds);
+    data.eventful.pretty_start_time = start_date.getShortDateAndTime();
+    data.eventful.ticket_url = 'http://www.stubhub.com/search/doSearch?pageNumber=1&rows=50&searchMode=event&channel=1;Concerts&location=10;' + encodeURIComponent(data.eventful.city) + ',' + data.eventful.region + '&searchStr=' + encodeURIComponent(data.eventful.title);
+    if (data.youtube.feed.entry) {
+      data.youtube.feed.firstVideoId = data.youtube.feed.entry[0]['media$group']['yt$videoid']['$t'];
+      data.youtube.feed.videoIds = videoIds.join(',');
+    }
+    else {
+      data.youtube.feed = {
+        firstVideoId: 'q1YABGdai5k',
+        videoIds: '',
+        height: '280px',
+        width: '400px'
+      }
+    }
+    res.render('concert_tour', {
+      page_title: 'Showzi - Concert and Tour Dates - ' + data.eventful.title,
+      page_keywords: data.eventful.title.split(' ').join(','),
+      query: querystring.parse(url.parse(req.url).query).id,
+      event_data: [data]
+    });
+  });
+  jj.go();
 });
 app.get('/widget/js/*.js', function(req, res){
   console.log(req);
@@ -47,84 +140,21 @@ app.listen(3000);
 
 // in showzi.js
 var showzi = {
-  preFetch: function(req) {
-    var locale = "us";
-    switch (locale) {
-      case "us":
-      default:
-        var prefetchRoute = showzi.prefetchRoute(req);
-        var options = {
-          host: 'api.eventful.com',
-          port: 80,
-          path: '/events/get/' + buildQuery(prefetchRoute.queryParams)
-        };
-        http.get(options, function(res) {
-          console.log("Got response: " + res.statusCode);
-        }).on('error', function(e) {
-          console.log("Got error: " + e.message);
-        });    
-    }   
-  },
-  prefetchRoute : function(req) {
-    var oUrl = url.parse(req.url, true);
-    var path = oUrl.pathname;
-    var rendererData = {type: /\/([A-Za-z]*)\/[^\/]*.*/.exec(path)[1], locale: 'us', device: 'www'};
-    var ids = /\/[A-Za-z]*\/([^\/]*).*/.exec(path)[1].split('-');
-    // TODO: figure out all relevant params for routing
-    var queryParams = {
-      id: ids[0]
-    };
-    return {
-      action: 'eventMash',
-      ids: ids,
-      queryParams: queryParams,
-      renderer: getRenderer(rendererData),
-      servicesSynch: {'eventful': ['youtube','freebase']},
-      servicesAsynch: null
-    };
-  },
-  getRenderer : function(rendererData) {
-    return rendererData.type;
+  buildQuery : function(params) {
+    var firstParamDeclared = false;
+    var sQuery = '';
+    for (idx in params) {
+      if (firstParamDeclared === false) {
+        sQuery = sQuery + "?" + idx + "=" + encodeURIComponent(params[idx]);
+        firstParamDeclared = true;
+      }
+      else {
+        sQuery = sQuery + "&" + idx + "=" + encodeURIComponent(params[idx]);
+      }
+    }
+    return sQuery;
   }
-}
-
-showzi.services = {
-  eventful: {
-    event: function(params) { // qp: pass id
-      var options = {
-        host: 'api.eventful.com',
-        port: 80,
-        path: '/events/get/' + buildQuery(params.queryParams)
-      };
-    }
-  },
-  youtube: {
-    performer: function(params, ) { // qp: pass q 
-      var queryParams = Object.create(params.queryParams, {
-        orderby: { value: 'published' },
-        "start-index": { value: '1' },
-        "max-results": { value: '10' },
-        v: { value: '2' },
-        alt: { value: 'json' }                          
-      });
-      var options = {
-        host: 'gdata.youtube.com',
-        port: 80,
-        path: '/feeds/api/videos' + queryParams
-      };
-      
-    }
-  },
-  freebase: {
-    performer: function(params) {
-      var options = {
-        host: 'api.eventful.com',
-        port: 80,
-        path: '/events/get/' + buildQuery(params.queryParams)
-      };
-    }
-  }
-}
+};
 
 function curry (fn, scope) {
   var args = [];
@@ -136,22 +166,28 @@ function curry (fn, scope) {
   };
 }
 
-function buildQuery(params) {
-  var firstParamDeclared = false;
-  sQuery = '';
-  for (idx in params) {
-    if (firstParamDeclared === false) {
-      sUrl = sUrl + "?" + idx + "=" + encodeURIComponent(params[idx]);
-      firstParamDeclared = true;
-    }
-    else {
-      sUrl = sUrl + "&" + idx + "=" + encodeURIComponent(params[idx]);
-    }
-  }
-  return sQuery;
+Date.prototype.addHours = function(hours) {
+  this.setTime(this.getTime() + (1000 * 60 * 60 * hours));
+  return this;
+}
+Date.prototype.getShortDateAndTime = function() {
+  return this.getShortDate() + " " + this.getTimeString();
+}
+Date.prototype.getShortDate = function() {
+  return this.getMonth() + "/" +  this.getDate() + "/" +  this.getFullYear();
 }
 
-showzi.preFetch.prototype = new EventEmitter();
-showzi.services.eventful.event = new EventEmitter();
-showzi.services.youtube.performer = new EventEmitter();
-showzi.services.freebase.performer = new EventEmitter();
+Date.prototype.getTimeString = function() {
+  var hours = this.getHours();
+  var hourString;
+  var minutesString = (this.getMinutes() == 0) ? "00" : this.getMinutes(); 
+  if (hours > 12) {
+    hourString = hours - 12 + ":" + minutesString + 'PM';
+  }
+  else {
+    hourString = hours + ":" + minutesString  + 'AM';
+  }
+  return hourString;
+}  
+
+

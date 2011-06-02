@@ -6,7 +6,10 @@ html(lang="en")
     meta(name='keywords', content='events,concerts,local,map,directions,tickets,videos,mp3s')
     title= pageTitle
     style
-      \#map_canvas { height: 100%; float: left; width: 65%; }
+      a { text-decoration: none; color: #000000;}
+      \#right_panel { height: 100%; float: left; width: 65%; position: relative; background-color: #ccc}
+      \#map_canvas { height: 100%; float: left; width: 100%; }
+      \#event_item_detail { position: absolute; top: 0;left:0; height: 100%; float: left; width: 100%;}
       \#search_shim #widget_search_box {  
           -moz-border-radius-bottomleft: 10px;
           border-bottom-left-radius: 15px 20px;
@@ -25,6 +28,9 @@ html(lang="en")
           margin: 0;
           width: 100%;
       } 
+      \#map_icon {
+        position: absolute; right: 3px;;
+      }
       .nihilo #control-container .dijitProgressBar {
         margin: 0px;
       }     
@@ -77,7 +83,7 @@ html(lang="en")
           -moz-border-radius-topleft: 10px;
           border-top-left-radius: 15px 20px;
           background-color: #fff;
-          height: 28px;
+          height: 32px;
           text-shadow: 2px 2px 2px #000;
           border-bottom: 1px solid #ccc;
           margin-left: 50%;
@@ -87,8 +93,9 @@ html(lang="en")
       \#logo .h { font-size: 22px; color: #95d6a8; }
       \#logo .o { font-size: 22px; color: #ffca08; }
       \#logo .w { font-size: 22px; color: #ee6d2c; }
-      \#logo .z { font-size: 22px; color: #7e2e25; }
-      \#logo .i { font-size: 26px; color: darkGreen;}
+      \#logo .z { font-size: 22px; color: #cd0827; }
+      \#logo .i { font-size: 26px; color: #ae005c;}
+      \#logo .beta { text-shadow: none; margin-left: 3px;}
       .linethrough { z-index: -1; position: absolute; top: 9px; height: 36%; width: 67px; background-color: #000000; left: 65px; *left: 64px; } 
       \#category-list .dijitButtonNode, #category-list .dijitDropDownButton {  margin: 0; width: 100% !important; height: 21px;} 
       \#category-list .dijitButtonNode {  border: none; width: 100% !important; overflow: hidden; }
@@ -145,12 +152,13 @@ html(lang="en")
     div#control-container
       div#logo
         div#logoContainer
-          span.s S
-          span.h H
-          span.o O
-          span.w W
-          span.z Z
-          span.i I
+          span.s t
+          span.h a
+          span.o d
+          span.w o
+          span.z o
+          span.beta beta
+          img#map_icon(src='/images/map_icon.png',style='cursor:pointer;')
       div#search-list
         div#category-list
         div(id="search_shim")        
@@ -162,5 +170,7 @@ html(lang="en")
         img(src='http://api.eventful.com/images/powered/eventful_58x20.gif',alt='Local Events, Concerts, Tickets')
         p
           a(href='http://eventful.com/',target='_blank') events by Eventful
-    div#map_canvas
+    div#right_panel      
+      div#map_canvas
+      iframe#event_item_detail(frameborder='0',style='background-color:#ffffff;display:none;')
     script(src='js/util.js')

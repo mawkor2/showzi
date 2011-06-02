@@ -232,12 +232,47 @@ showzi.util.events = {
   initialized: false, 
   init: function() {
     if (!showzi.util.events.initialized) {
+      var currentUrl = document.location.href.split('#');
+      if (currentUrl.length > 1 && currentUrl[1].length > 0) {
+        dojo.byId('event_item_detail').src = currentUrl.join('');
+        dojo.byId('event_item_detail').style.display = 'block';
+      }
+      dojo.byId('map_icon').addEventListener('click', function() {
+        dojo.byId('event_item_detail').style.display = 'none';
+      });
+      dojo.query('#event_list').delegate('.event_item_link', 'onclick', function(evt) {
+        if (evt.target.className === 'target') {
+          dojo.byId('event_item_detail').style.display = 'none';
+          var eventMarkerIdx = dojo.query(evt.target).parents('.event_item')[0].id.split('_')[2];
+          showzi.map.setCenter(new google.maps.LatLng(showzi.eventMarkers[eventMarkerIdx].event.latitude, showzi.eventMarkers[eventMarkerIdx].event.longitude));
+          showzi.eventMarkers[eventMarkerIdx].setAnimation(google.maps.Animation.BOUNCE);
+          setTimeout('showzi.eventMarkers[' + eventMarkerIdx + '].setAnimation(null)', 1500);
+          dojo.stopEvent(evt);
+          return false;
+        }
+        dojo.byId('event_item_detail').style.display = 'block';
+        var urlParts = this.href.split('/');
+        var fraggedUrl = '';
+        for (var idx = 0; idx < urlParts.length; idx++) {
+          if (idx !== 0) {
+            fraggedUrl += '/';
+          }
+          if (idx === 3) {
+            fraggedUrl += '#';
+          }         
+          fraggedUrl += urlParts[idx];
+        }
+        location.href = fraggedUrl;
+        dojo.byId('event_item_detail').src = this.href;
+        dojo.stopEvent(evt);
+        return false;
+      });
       showzi.searchBox = new dijit.form.TextBox({
           name: "search_box",
           node: "search_box",
           id: "search_box",
           value: "" /* no or empty value! */,
-          placeHolder: "search venue,title,description",
+          placeHolder: "search",
           onKeyDown: function(e) {
             if (e.keyCode === 13) {
               showzi.util.events.list.search(e.target.value);
@@ -260,15 +295,6 @@ showzi.util.events = {
         var listHeight = (viewport_height - 52) + 'px';        
         dojo.style('event_list', 'height', listHeight);
        } );
-      dojo.query('#event_list').delegate('img.info', 'onclick', function(evt) {
-        var eventMarkerIdx = dojo.query(evt.target).parents('.event_item')[0].id.split('_')[2];
-        new dijit.Dialog({
-          title: showzi.eventMarkers[eventMarkerIdx].event.title,
-          style: 'width: 500px',
-          content: showzi.eventMarkers[eventMarkerIdx].event.description
-        }).show();
-        // TODO: tear down the dialog
-      });
     }
     showzi.util.events.initialized = true;
   },
@@ -283,12 +309,6 @@ showzi.util.events = {
         }
       }
       dojo.byId('event_list').innerHTML = markup.join('');
-      dojo.query('#event_list').delegate('img.target', 'onclick', function(evt) {
-        var eventMarkerIdx = dojo.query(evt.target).parents('.event_item')[0].id.split('_')[2];
-        showzi.map.setCenter(new google.maps.LatLng(showzi.eventMarkers[eventMarkerIdx].event.latitude, showzi.eventMarkers[eventMarkerIdx].event.longitude));
-        showzi.eventMarkers[eventMarkerIdx].setAnimation(google.maps.Animation.BOUNCE);
-        setTimeout('showzi.eventMarkers[' + eventMarkerIdx + '].setAnimation(null)', 1500);
-      });
     },
     search : function(searchText) {
       for (var eventMarker in showzi.eventMarkers) {
@@ -320,6 +340,7 @@ showzi.util.events = {
     render : function(event, index) {
       event.list_id = 'event_item_' + index;
       var markup = [];
+      markup.push('<a class="event_item_link" href="/concert_tour/?id=' + event.id + '">');
       markup.push(['<div class="event_item" id="event_item_',index,'"><div class="image_title">'].join(''));
       if (event.image && event.image.small) {
         markup.push(['<img class="image" src="',event.image.small.url,'">'].join(''));
@@ -352,7 +373,7 @@ showzi.util.events = {
       }
       markup.push(['<div class="venue_name">',event.venue_name,'</div>'].join(''));
       markup.push(['<div class="venue_address">',event.venue_address,'</div>'].join(''));
-      markup.push('</div>');
+      markup.push('</div></a>');
       return markup.join('');
 /*
 city_name: "Los Angeles"
