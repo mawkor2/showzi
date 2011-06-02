@@ -22,7 +22,7 @@ app.get('/fonts/*', function(req, res){
 });
 app.get('/', function(req, res){
   res.render('index', {
-    pageTitle: 'Showzi - Find events in your area'
+    pageTitle: 'Tadoo - Find events in your area'
   })
 });
 app.get('/concert_tour/', function(req, res){
