@@ -4,6 +4,9 @@ var querystring = require('querystring');
 var app = require('express').createServer();
 var remix = require('./remix');
 var EventEmitter =  require('events').EventEmitter;
+process.on('uncaughtException', function(err){
+  // dont crash
+});
 app.set('view engine', 'jade');
 app.set('view options', {
   layout: false
