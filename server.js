@@ -123,7 +123,7 @@ app.get('/concert_tour/', function(req, res){
       }
     }
     res.render('concert_tour', {
-      page_title: 'Showzi - Concert and Tour Dates - ' + data.eventful.title,
+      page_title: 'Concert and Tour Dates - ' + data.eventful.title,
       page_keywords: data.eventful.title.split(' ').join(','),
       query: querystring.parse(url.parse(req.url).query).id,
       event_data: [data]
