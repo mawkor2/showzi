@@ -44,11 +44,11 @@ app.get('/', function(req, res){
     sort_order: 'popularity'
   };
   oQuery.within = 10;
-  //var lat = 34.07996230865873;
-  //var lng = -118.33648681640625;
+  var lat = 34.07996230865873;
+  var lng = -118.33648681640625;
   //test
-  var lat = null;
-  var lng = null;
+  //var lat = null;
+  //var lng = null;
   if (geoipInfo) {
     lat = geoipInfo.latitude;
     lng = geoipInfo.longitude;
