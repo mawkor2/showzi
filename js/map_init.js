@@ -1,4 +1,5 @@
-window.showzi = {};
+// TODO: fix junky google code example copy paste
+
 var initialLocation;
 var siberia = new google.maps.LatLng(60, 105);
 var newyork = new google.maps.LatLng(40.69847032728747, -73.9514422416687);
@@ -21,10 +22,6 @@ function positionAcquired(browserSupportFlag, errorFlag, myOptions) {
   }
   myOptions.center = initialLocation;
   showzi.map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-  showzi.util.eventful = new showzi.util.eventful();
-  var latLng = showzi.map.getCenter();
-  showzi.util.eventful.getCategories();
-  showzi.util.eventful.searchByCoords(latLng.lat(), latLng.lng());
 }
 
 function initialize() {

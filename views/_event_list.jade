@@ -1,0 +1,22 @@
+- if (events)
+  - var idx = 0;
+  - events.forEach(function(event, idx){
+    a(class="event_item_link", href="/concert_tour/?id=" + event.id)
+      div(class="event_item", id="event_item_" + idx)
+        div(class="image_title")
+          - if (event.image && event.image.small && event.image.small.url) {
+            img(class="image", src=event.image.small.url)
+          - } else {
+            img(class="image", src="/images/no_image.jpg")
+          - }
+          div(class="title")
+            span #{event.title}
+          div.icons
+            img(class="target", src="/images/target.png")
+            img(class="info", src="/images/info.jpg")
+        div(class="location") lkj
+        div(class="start_time") #{(new Date(event.start_time)).getShortDateAndTime()}
+        div(class="venue_name") #{event.venue_name}
+        div(class="venue_address") #{event.venue_address}
+  - idx++;
+  - })

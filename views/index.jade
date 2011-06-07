@@ -122,8 +122,27 @@ html(lang="en")
       \#event_list { height: 545px; overflow-y: scroll; border-top: 1px solid #ccc;  border-bottom: 1px solid #ccc; width: 100%;}
       \#downloadProgress { width: 100%; border: none; border-top: 1px solid #ccc; height: 9px;}
     script(src='http://ajax.googleapis.com/ajax/libs/dojo/1.6/dojo/dojo.xd.js',djConfig='parseOnLoad: true')
+    script
+      dojo.require('dojo.fx');
+      dojo.require('dojox.fx.scroll');
+      dojo.require('dojo.io.script');
+      dojo.require('dijit.Menu');
+      dojo.require('dijit.form.Button');
+      dojo.require('dijit.ProgressBar');
+      dojo.require('dojo.parser');
+      dojo.require('dijit.Tooltip');
+      dojo.require('dojox.NodeList.delegate');
+      dojo.require('dijit.Dialog');
+      dojo.require('dijit.form.TextBox');
     script(src='http://maps.google.com/maps/api/js?sensor=true')
-    script(src='js/map_init.js')
+    script
+      var showzi = {
+        eventSearchData : !{sEvents},   
+        util: {},
+        lat: #{lat},
+        lng: #{lng}
+      };
+    script(src='js/util.js')
     link(rel='stylesheet',type='text/css',href='http://ajax.googleapis.com/ajax/libs/dojo/1.6/dijit/themes/nihilo/nihilo.css')
     script
       var _gaq = _gaq || [];
@@ -148,7 +167,7 @@ html(lang="en")
         ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
-  body(class="nihilo")
+  body(class="nihilo",style="overflow:hidden;")
     div#control-container
       div#logo
         div#logoContainer
@@ -165,12 +184,13 @@ html(lang="en")
           input(id="search_box",type="text")
       div(dojoType="dijit.ProgressBar",jsId="jsProgress",id="downloadProgress", maximum="10")
       div#event_list
+        != partial('_event_list', { events: oEvents.event })
       div#widgetContainer
       div.eventful-badge.eventful-small.bottom
         img(src='http://api.eventful.com/images/powered/eventful_58x20.gif',alt='Local Events, Concerts, Tickets')
         p
           a(href='http://eventful.com/',target='_blank') events by Eventful
-    div#right_panel      
+    div#right_panel(style="position:relative;")     
       div#map_canvas
-      iframe#event_item_detail(frameborder='0',style='background-color:#ffffff;display:none;')
-    script(src='js/util.js')
+      div#event_item_detail(style="position:absolute;right:0;top:0;height:100%;width:100%;")
+        iframe#event_item_detail_frame(frameborder='0',style='background-color:#ffffff;width:100%;height:100%')

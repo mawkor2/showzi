@@ -1,10 +1,13 @@
 var url = require('url');
 var http = require('http');
+var geo = require('geo');
+var natural = require('natural');
 var querystring = require('querystring');
 var app = require('express').createServer();
 var remix = require('./remix');
 var EventEmitter =  require('events').EventEmitter;
 process.on('uncaughtException', function(err){
+  console.log(err);
   // dont crash
 });
 app.set('view engine', 'jade');
@@ -12,22 +15,74 @@ app.set('view options', {
   layout: false
 });
 app.get('/js/*.js', function(req, res){
-  console.log(req);
   res.sendfile('.'+ req.url);
 });
 app.get('/images/*', function(req, res){
-  console.log(req);
   res.sendfile('.'+ req.url);
 });
 app.get('/fonts/*', function(req, res){
-  console.log(req);
   res.sendfile('.'+ req.url);
 });
 app.get('/', function(req, res){
-  res.render('index', {
-    pageTitle: 'Tadoo - Find events in your area'
-  })
+  var oQuery = {
+    within: null,
+    units: 'mile',
+    location: null,
+    app_key: '7pfDQXSvjB7GFm9M',
+    date: 'This Week,Next Week',
+    page_size: 400,
+    c: 'music',
+    sort_order: 'popularity'
+  };
+  oQuery.within = 10;
+  var lat = lat || 34.07996230865873;
+  var lng = lng || -118.33648681640625;
+  oQuery.location = lat + "," + lng;
+  var sQuery = showzi.buildQuery(oQuery);
+  sQuery = sQuery.substr(1, sQuery.length - 1);
+  console.log(sQuery);
+  var config = {
+    eventful: {
+      request: {
+        options: {
+          host: 'api.eventful.com',
+          port: 80,
+          path: '/json/events/search/',
+          query: sQuery,
+          method: 'GET'
+        }
+      }
+    }
+  };
+  var date_1 = new Date();
+  var jj = remix.remix(config);
+  var date_2 = new Date();
+  console.log('remix: ' + (date_2 - date_1) + 'ms');
+  jj.wire();
+  var date_3 = new Date();
+  console.log('wire: ' + (date_3 - date_2) + 'ms');
+  jj.events.on('complete', function(data) {
+    console.log(lat);
+    res.render('index', {
+      pageTitle: 'Tadoo - Find events in your area',
+      sEvents: JSON.stringify(data.eventful),
+      oEvents: data.eventful.events,
+      lat: lat,
+      lng: lng
+    });
+  });
+  jj.go();
 });
+
+/*
+
+note to self:
+
+https://www.eventbrite.com/json/event_get?id=1737598203&app_key=OTg4OTIzNDZiYjY5
+OTg4OTIzNDZiYjY5 
+
+
+*/
 app.get('/concert_tour/', function(req, res){
   var event_id = querystring.parse(url.parse(req.url).query).id;
   var config = {
@@ -61,8 +116,35 @@ app.get('/concert_tour/', function(req, res){
             alt: 'json',
             q: ''                        
           };
-          query.q = '"' + data.title + '"';
-          req.options.query = showzi.buildQuery(query);  
+          console.log('hello mr');
+          if (data.performers && data.performers.performer && data.performers.performer.name) {
+            query.q = '"' + data.performers.performer.name + '"';
+          }
+          else if (data.description && data.description.match(/.*(http:\/\/www.youtube.com\/[^\s]*).*/)) {            
+            query.q = /.*http:\/\/www.youtube.com\/watch?v=([^\s])*.*/.exec(data.description)[1];
+          }
+          else {
+            var title = data.title;
+            title = title.replace('w/','');
+            var regX = /.*:(.*)/.exec(title);
+            if (regX && regX.length > 1) {
+              title = regX[1];
+            };
+            // strip out location like los angeles, ca
+            var regX = /(.*)[\s][A-Za-z]*,\s*[A-Za-z]\{2\}(.*)/.exec(title);
+            if (regX && regX.length > 1) {
+              title = regX[1];
+              if (title.length > 2) {
+                title += regX[2];
+              };
+            };
+            var tokens = title.toLowerCase().tokenize();
+            var tokensScrubbed = scrub(tokens).stripPresenters().stripDates().stripLive().stripSoldOut().stripPlays();
+            query.q = tokensScrubbed.tokens.join(',');
+            console.log(query.q);         
+          };
+          req.options.query = showzi.buildQuery(query);
+          console.log(req.options.query);  
         }
       }
     }
@@ -70,6 +152,7 @@ app.get('/concert_tour/', function(req, res){
   var jj = remix.remix(config);
   jj.wire();
   jj.events.on('complete', function(data) {
+    console.log('complete?');
     data.youtube.feed.height = '280px';
     data.youtube.feed.width = '400px';
     var videoIds = [];
@@ -78,6 +161,14 @@ app.get('/concert_tour/', function(req, res){
         videoIds.push(data.youtube.feed.entry[idx]['media$group']['yt$videoid']['$t']);
       }
     };
+    var tagRegX = /<[^>]*>/g;
+    console.log(data.eventful);
+    if (data.eventful.description) {
+      data.eventful.description = data.eventful.description.replace(/<[^>]*>?/g, '');
+    }
+    else {
+      data.eventful.description = "No description";
+    }
     if (data.eventful.free === 1) {
       data.eventful.displayPrice = 'FREE!';
     }
@@ -86,7 +177,7 @@ app.get('/concert_tour/', function(req, res){
         data.eventful.displayPrice = 'Varies';
       }
       else {
-        data.eventful.displayPrice = '$' + data.eventful.price;
+        data.eventful.displayPrice = data.eventful.price.replace(/<[^>]*>/g, '');
       }
     }
     if (!data.eventful.images) {
@@ -132,10 +223,10 @@ app.get('/concert_tour/', function(req, res){
       event_data: [data]
     });
   });
+  console.log('go?');
   jj.go();
 });
 app.get('/widget/js/*.js', function(req, res){
-  console.log(req);
   res.sendfile('.'+ req.url);
 });
 app.listen(3000);
@@ -191,6 +282,75 @@ Date.prototype.getTimeString = function() {
     hourString = hours + ":" + minutesString  + 'AM';
   }
   return hourString;
-}  
+} 
+
+function htmlEscape(text) {
+   return text.replace(/&/g,'&amp;').
+     replace(/</g,'&lt;').
+     replace(/"/g,'&quot;').
+     replace(/'/g,'&#039;');
+} 
+
+function scrub(tokens) {
+  // ugly nasty completely subjective data scrub heuristic methods
+  var _self = tokens; 
+  return {
+    stripPresenters: function() {
+      var spliceIdx = null;
+      for (var idx = 0; idx < _self.length; idx++) {
+        if (_self[idx].match(/presents|present/)) {
+          spliceIdx = idx;
+        }
+      };
+      if (spliceIdx) {
+        _self.splice(0, spliceIdx + 1);
+      };
+      return this;
+    },
+    stripDates: function() {
+      for (var idx = 0; idx < _self.length; idx++) {
+        if (_self[idx].match(/jan|feb|mar|apr|may|jun|jul|aug|sep|oct|january|february|march|april|may|june|july|august|september|october/) || _self[idx].match(/\d+/)) {
+          _self.splice(idx, 1);
+          idx--;
+        };
+      };
+      return this;
+    },
+    stripLive: function() {
+      for (var idx = 0; idx < _self.length; idx++) {
+        if (_self[idx] === 'live' && _self[idx + 1].match(/dj|band/)) {
+          _self.splice(idx, 2);          
+        };
+      };
+      return this;      
+    },
+    stripSoldOut: function() {
+      for (var idx = 0; idx < _self.length; idx++) {
+        if (_self[idx] === 'sold' && _self[idx + 1] === 'out') {
+          _self.splice(idx, 2);          
+        };
+      };
+      return this;      
+    },
+    stripPlays: function() {
+      for (var idx = 0; idx < _self.length; idx++) {
+        if (_self[idx] === 'plays') {
+          _self.splice(idx, _self.length - idx);
+        };
+      };
+      return this;      
+    },
+    tokens: _self
+  }
+}
+
+
+var transforms = {
+  eventful: function(data) {
+    
+
+  }
+}
+
 
 

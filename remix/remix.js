@@ -77,7 +77,6 @@ exports.remix = function(config) {
           });
           res.on('error', function(e) {
             var error = e.message + ': ' + fullUrl;
-            console.log(error);
           });
         }
       };
@@ -90,7 +89,6 @@ exports.remix = function(config) {
       var request = http.request(options, responseScope(this));
       request.on('error', function(e) {
         var error = e.message + ': ' + fullUrl;
-        console.log(error);
       });
       request.end();
     };

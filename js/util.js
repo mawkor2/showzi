@@ -20,20 +20,8 @@ Date.prototype.getTimeString = function() {
     hourString = hours + ":" + minutesString  + 'AM';
   }
   return hourString;
-}  
+} 
 
-
-dojo.require('dojo.io.script');
-dojo.require('dijit.Menu');
-dojo.require('dijit.form.Button');
-dojo.require('dijit.ProgressBar');
-dojo.require('dojo.parser');
-dojo.require('dojo.fx');
-dojo.require('dijit.Tooltip');
-dojo.require('dojox.NodeList.delegate');
-dojo.require('dijit.Dialog');
-dojo.require('dojox.fx.scroll');
-dojo.require('dijit.form.TextBox');
 dojo.declare('showzi.util.eventful',
   null, {
     constructor: function() {
@@ -146,7 +134,6 @@ dojo.declare('showzi.util.eventful',
   }
 );
 
-
 showzi.buildUrl = function(params) {
   var firstParamDeclared = false;
   var sUrl = "";
@@ -189,7 +176,7 @@ showzi.processEventData = function(data) {
     var event = data.events.event[idx];
     event.active = true;
     var categoryId = showzi.util.eventful.category.id;
-    var categoryName = showzi.util.eventful.category.name;  
+    var categoryName = showzi.util.eventful.category.name;
     var marker = new google.maps.Marker({
       position: new google.maps.LatLng(event.latitude, event.longitude), 
       map: showzi.map,
@@ -199,7 +186,7 @@ showzi.processEventData = function(data) {
         name: categoryName,
         id: categoryId
       },
-      visible: false
+      visible: true
     });
     showzi.eventMarkers.push(marker);
     showzi.createMarkerEvent(marker);
@@ -232,10 +219,23 @@ showzi.util.events = {
   initialized: false, 
   init: function() {
     if (!showzi.util.events.initialized) {
+      var mapOptions = {
+        zoom: 13,
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        center: new google.maps.LatLng(showzi.lat, showzi.lng)
+      };
+      showzi.map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+      showzi.util.eventful = new showzi.util.eventful();
+      showzi.util.eventful.loadingToggler.hide();
+      showzi.util.eventful.getCategories();
+      showzi.processEventData(showzi.eventSearchData);
+      showzi.util.eventful.setMapParams(showzi.lat, showzi.lng, 10);
+
       var currentUrl = document.location.href.split('#');
       if (currentUrl.length > 1 && currentUrl[1].length > 0) {
-        dojo.byId('event_item_detail').src = currentUrl.join('');
+        dojo.byId('event_item_detail_frame').src = currentUrl.join('');
         dojo.byId('event_item_detail').style.display = 'block';
+        dojo.byId('event_item_detail').style.zIndex = '1';
       }
       dojo.byId('map_icon').addEventListener('click', function() {
         dojo.byId('event_item_detail').style.display = 'none';
@@ -243,6 +243,7 @@ showzi.util.events = {
       dojo.query('#event_list').delegate('.event_item_link', 'onclick', function(evt) {
         if (evt.target.className === 'target') {
           dojo.byId('event_item_detail').style.display = 'none';
+          dojo.byId('event_item_detail').style.zIndex = '-1';
           var eventMarkerIdx = dojo.query(evt.target).parents('.event_item')[0].id.split('_')[2];
           showzi.map.setCenter(new google.maps.LatLng(showzi.eventMarkers[eventMarkerIdx].event.latitude, showzi.eventMarkers[eventMarkerIdx].event.longitude));
           showzi.eventMarkers[eventMarkerIdx].setAnimation(google.maps.Animation.BOUNCE);
@@ -251,6 +252,7 @@ showzi.util.events = {
           return false;
         }
         dojo.byId('event_item_detail').style.display = 'block';
+        dojo.byId('event_item_detail').style.zIndex = '1';
         var urlParts = this.href.split('/');
         var fraggedUrl = '';
         for (var idx = 0; idx < urlParts.length; idx++) {
@@ -263,7 +265,7 @@ showzi.util.events = {
           fraggedUrl += urlParts[idx];
         }
         location.href = fraggedUrl;
-        dojo.byId('event_item_detail').src = this.href;
+        dojo.byId('event_item_detail_frame').src = this.href;
         dojo.stopEvent(evt);
         return false;
       });
@@ -289,6 +291,7 @@ showzi.util.events = {
       var viewport_height = viewport.h;
       var listHeight = (viewport_height - 52) + 'px';
       dojo.style('event_list', 'height', listHeight);
+      // TODO: this is bad - need to do it with pure css 
       dojo.connect ( window, 'onresize', function(e){
         var viewport = dijit.getViewport();
         var viewport_height = viewport.h;
@@ -300,7 +303,6 @@ showzi.util.events = {
   },
   list: {
     render : function() {
-      showzi.util.events.init();
       var markup = [];
       for (var eventMarker in showzi.eventMarkers) {
         var event = showzi.eventMarkers[eventMarker].event; 
@@ -450,7 +452,10 @@ showzi.findNodeWith = function(searchText, bodyText, frameId, recursions) {
     return window.frames[frameId].contentDocument.getElementById(nodeId);
   }
   else {
-    return document.getElementById(nodeId); // TODO: test perfromance if you could extend a query selector here, alternately could use native getElementsByClassName if there is no id
+    return document.getElementById(nodeId); // TODO: test performance if you could extend a query selector here, alternately could use native getElementsByClassName if there is no id
   }
 }
+dojo.addOnLoad(function(){
+  showzi.util.events.init();
+});
 
