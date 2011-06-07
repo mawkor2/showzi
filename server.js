@@ -1,6 +1,7 @@
 var url = require('url');
 var http = require('http');
-var geo = require('./simple-geoip');
+var sgeoip = require("./simplegeoip");
+var geoip = sgeoip();
 var natural = require('natural');
 var querystring = require('querystring');
 var app = require('express').createServer();
@@ -24,6 +25,14 @@ app.get('/fonts/*', function(req, res){
   res.sendfile('.'+ req.url);
 });
 app.get('/', function(req, res){
+  var ip_address = null;
+  if (req.headers['x-forwarded-for']) {
+    ip_address = req.headers['x-forwarded-for'];
+  }
+  else {
+    ip_address = req.connection.remoteAddress;
+  }
+  var geoipInfo = geoip.lookupByIP(ip_address, true);
   var oQuery = {
     within: null,
     units: 'mile',
@@ -35,8 +44,15 @@ app.get('/', function(req, res){
     sort_order: 'popularity'
   };
   oQuery.within = 10;
-  var lat = lat || 34.07996230865873;
-  var lng = lng || -118.33648681640625;
+  //var lat = 34.07996230865873;
+  //var lng = -118.33648681640625;
+  //test
+  var lat = null;
+  var lng = null;
+  if (geoipInfo) {
+    lat = geoipInfo.latitude;
+    lng = geoipInfo.longitude;
+  }
   oQuery.location = lat + "," + lng;
   var sQuery = showzi.buildQuery(oQuery);
   sQuery = sQuery.substr(1, sQuery.length - 1);
