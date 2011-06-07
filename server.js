@@ -1,6 +1,6 @@
 var url = require('url');
 var http = require('http');
-var geo = require('simple-geoip');
+var geo = require('./simple-geoip');
 var natural = require('natural');
 var querystring = require('querystring');
 var app = require('express').createServer();
