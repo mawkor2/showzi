@@ -239,6 +239,8 @@ showzi.util.events = {
       }
       dojo.byId('map_icon').addEventListener('click', function() {
         dojo.byId('event_item_detail').style.display = 'none';
+        var latLng = showzi.map.getCenter();
+        showzi.util.eventful.searchByCoords(latLng.lat(), latLng.lng());        
       });
       dojo.query('#event_list').delegate('.event_item_link', 'onclick', function(evt) {
         if (evt.target.className === 'target') {

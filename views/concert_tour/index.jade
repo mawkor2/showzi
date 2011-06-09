@@ -7,24 +7,54 @@ html(lang="en",style="overflow-x:hidden;")
     meta(name='keywords', content='events,concerts,local,map,directions,tickets,videos,mp3s,' + page_keywords)
     style
       html {border: 0; padding: 0; margin: 0;}
-      body { font-family: Tahoma; font-size: 13px; border:0; padding: 0; margin: 0;}
+      body { font-family: Tahoma; font-size: 13px; border:0; padding: 0; margin: 0;background-color: #111; color: snow;}
       #info_panel .module { overflow: auto; _display: inline; padding: 3px; }
-      #info_panel .panel2 { float: left; }
-      #info_panel div.youtube {float: left; margin-left:30px; }
-      #info_panel .eventful_detail { padding: 5px; max-width: 240px; width: auto;}
-      #info_panel .ticket_image {float:right;}
-      #info_panel .youtube_video {text-align:left;height: 280px; padding: 5px; }
+
+      #info_panel div.youtube {float: left; margin-left:30px; border: 8px solid snow; border-radius: 15px;  -moz-border-radius: 15px; }
+      #info_panel .eventful_detail { padding: 5px; max-width: 240px; width: auto; float: left;}
+      #info_panel .ticket_image {position: absolute; right: -7px;}
+      #info_panel .youtube_video {text-align:left;height: 280px; padding: 2px; }
       #info_panel .description {  margin: 5px; }
-      #info_panel .info { margin: 5px; } 
+      #info_panel .info { margin: 5px; padding: 3px 10px; text-shadow: -1px 1px #444;} 
       #info_panel .eventful { float: left; } 
-      #info_panel #panel2 { overflow: auto;width:150%;}
-      #info_panel h1.info { background-color: #000000; color: #ffffff; margin-top: 0px;
+      #info_panel #panel2 { 
+        padding-top: 10px;
+        padding-bottom: 10px;
+        border: 3px solid #CCC;
+        border-left: none;
+        border-right: none;
+        overflow: auto;width:150%;}
+      #info_panel h1.info { background-color: #dee; border: 1px solid #010; color: #FFD012; margin-top: 0px;
         -moz-border-radius-bottomright: 10px;
         border-bottom-right-radius: 15px 20px;
         -moz-border-radius-topright: 10px;
         border-top-right-radius: 15px 20px;    
       }
-      #info_panel .fb_share_link { padding:2px 0 0 20px; height:16px; background:url(http://static.ak.facebook.com/images/share/facebook_share_icon.gif?6:26981) no-repeat top left; }      
+      h4 {
+        -moz-transform-origin: top left;
+        -webkit-transform-origin: top left;
+        -o-transform-origin: top left;
+        width: 275px;
+        height: 20px;
+        top: 275px;
+        margin-top: 10px;
+        padding: 0;
+        position: relative;
+        -webkit-transform-origin-x: 0%;
+        -webkit-transform-origin-y: 0%;
+        -moz-transform: rotate(-90deg);
+        -webkit-transform: rotate(-90deg);
+        -o-transform: rotate(-90deg);
+        filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+        font-size: 15px;
+        font-weight: bold;
+        text-align: right;
+        line-height: 20px;
+        display: block;          
+      }      
+      #info_panel .fb_p { position: relative;}
+      #info_panel .fb_share_link { padding:0 0 0 20px; height:16px; background:url(http://static.ak.facebook.com/images/share/facebook_share_icon.gif?6:26981) no-repeat top left; color: snow;position: absolute; top: 10px; }      
+      hr {background-color: snow; height: 2px; border: none; }
       #info_panel img.eventful_main { height: 130px; width: 130px; border: 1px solid #ccc; float: left; margin: 0 7px 3px 0; }
       #info_panel h1 { font-size: 22px;} 
     script
