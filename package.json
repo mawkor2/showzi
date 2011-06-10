@@ -6,7 +6,7 @@
 
   },
   "engines": {
-    "node" : "0.4.7"
+    "node" : "0.4.5"
   },
   "dependencies": {
     "natural" : "0.0.22",
