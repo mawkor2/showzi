@@ -245,7 +245,7 @@ app.get('/concert_tour/', function(req, res){
 app.get('/widget/js/*.js', function(req, res){
   res.sendfile('.'+ req.url);
 });
-app.listen(3000);
+app.listen(8080);
 
 
 // in showzi.js
