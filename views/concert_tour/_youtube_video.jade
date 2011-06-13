@@ -1,3 +1,4 @@
 object(width=width, height=height)
   param(name='movie', value='http://www.youtube.com/v/' + firstVideoId + '&color1=0xD60000&color2=0x810000&version=3&rel=0&fs=1&loop=1&playlist=' + videoIds)
-  embed(allowscriptaccess='always', src='http://www.youtube.com/v/' + firstVideoId + '&color1=0xD60000&fs=1&color2=0x810000&rel=0&version=3&loop=1&playlist=' + videoIds, type='application/x-shockwave-flash', width=width, height=height)
+  param(name="WMode",value="Transparent")
+  embed(wmode='transparent',allowscriptaccess='always', src='http://www.youtube.com/v/' + firstVideoId + '&color1=0xD60000&fs=1&color2=0x810000&rel=0&version=3&loop=1&playlist=' + videoIds, type='application/x-shockwave-flash', width=width, height=height)
