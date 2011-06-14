@@ -205,7 +205,18 @@ showzi.putEvents = function(data) {
   }
   showzi.util.events.list.clear();
   showzi.util.events.list.render();
-}
+};
+
+showzi.findEventWithId = function(id) {
+  var eventItemLinks = document.getElementsByClassName('event_item_link');
+  for (var idx in eventItemLinks) {
+    var elem = eventItemLinks[idx];
+    if (elem.href.match(id)) {
+      var itemIdx = elem.firstChild.id.split('_')[2];
+      return itemIdx;
+    }
+  }
+};
 
 showzi.createMarkerEvent= function(marker) {
   google.maps.event.addListener(marker, 'click',  function() {
@@ -228,16 +239,17 @@ showzi.util.events = {
       showzi.util.eventful = new showzi.util.eventful();
       showzi.util.eventful.loadingToggler.hide();
       showzi.util.eventful.getCategories();
-      showzi.processEventData(showzi.eventSearchData);
       showzi.util.eventful.setMapParams(showzi.lat, showzi.lng, 10);
-
       var currentUrl = document.location.href.split('#');
       if (currentUrl.length > 1 && currentUrl[1].length > 0) {
         dojo.byId('event_item_detail_frame').src = currentUrl.join('');
         dojo.byId('event_item_detail').style.display = 'block';
         dojo.byId('event_item_detail').style.zIndex = '1';
         showzi.map.hasFocus = false;
+        showzi.map.currentEventId = dojo.queryToObject(currentUrl[1].split('?')[1]).id;
+        showzi.map.selectedEvent = showzi.findEventWithId(showzi.map.currentEventId);
       }
+      showzi.processEventData(showzi.eventSearchData);
       dojo.byId('map_icon').addEventListener('click', function() {
         dojo.fadeOut({node:'event_item_detail',duration: 400}).play();
         if (showzi.map.hasFocus) {
@@ -438,45 +450,54 @@ showzi.loadWidget = function(eventMarker) {
   ;
 }
 
-showzi.findNodeWith = function(searchText, bodyText, frameId, recursions) {    
-  // TODO: would be nice to childNode on the # of recursions, tricky though... not sure how to get the right childnode yet
-  var maxRecursions = 5;
-  var regXNodeOpen = /<[a-zA-Z]*((?:\s*[a-zA-Z0-9]*=[\'\"][^\'\"=]*[\'\"])*)\s*>/;
-  var regXNodeClose = /<\/[a-zA-Z]*>/;
-  if (typeof searchText !== "string") { 
-    searchText = searchText.source;
-  }
-  // note: performance seems fast in this case less than 1ms, the only concern is bodyText beign a very large string
-  var regXTextNodeSearch = new RegExp(regXNodeOpen.source + searchText);
-  var t1 = new Date();
-  var regXTextNodeSearchResults = regXTextNodeSearch.exec(bodyText);
-  var t2 = new Date();
-  //console.log("Regex performance: " + (t2 - t1) + "ms"); 
-  if (regXTextNodeSearchResults ===  null) {
-    return null;
-  }         
-  var nodeText = regXTextNodeSearchResults[0];
-  var allAttributesString = regXTextNodeSearchResults[1];
-  if (!/\s*[iI][dD]=[\'\"]?([^\'\"=]*)[\'\"\s$]/.exec(allAttributesString)) {
-    if (recursions === null || recursions === undefined) { 
-        recursions = 1;
-    }
-    else {
-        recursions += 1;
-    }
-    if (recursions !== maxRecursions) {
-        return shh.findNodeWith(nodeText, bodyText, frameId, recursions);
-    }
+showzi.grepNodes = function(searchText, frameId) {    
+  var matchedNodes = [];
+  var regXSearch = new RegExp(searchText, "g"); 
+  var currentNode = null, matches = null;
+  if (frameId && !window.frames[frameId]) {
     return null;
   }
-  var resultNode;
-  var nodeId = (/\s*[iI][dD]=[\'\"]?([^\'\"=]*)[\'\"\s$]/.exec(allAttributesString))[1];
-  if (frameId) {
-    return window.frames[frameId].contentDocument.getElementById(nodeId);
+  var theDoc = (frameId) ? window.frames[frameId].contentDocument : document;
+  var allNodes = (theDoc.all) ? theDoc.all : theDoc.getElementsByTagName('*');
+  for (var nodeIdx in allNodes) {
+    currentNode = allNodes[nodeIdx];
+    if (currentNode.nodeName === undefined) {
+      break;
+    }
+    if (!(currentNode.nodeName.toLowerCase().match(/svg|img|html|script|head|meta|link|object/)) && !(currentNode.namespaceURI === "http://www.w3.org/2000/svg")) {
+      matches = currentNode.innerHTML.match(regXSearch);
+      var totalMatches = 0;
+      if (matches) {
+        var totalChildElements = 0;
+        for (var i=0;i<currentNode.children.length;i++) {
+          if (!(currentNode.children[i].nodeName.toLowerCase().match(/svg|img|html|script|head|meta|link|object/)) && !(currentNode.namespaceURI === "http://www.w3.org/2000/svg")) {
+            totalChildElements++;
+          }
+        }
+        matchedNodes.push({node: currentNode, numMatches: matches.length, childElementsWithMatch: 0, nodesYetTraversed: totalChildElements});
+      }
+      for (var i = matchedNodes.length - 1; i >= 0; i--) {
+        previousElement = matchedNodes[i - 1];
+        if (!previousElement) {
+          continue;
+        }
+        if (previousElement.nodesYetTraversed !== 0 && previousElement.numMatches !== previousElement.childElementsWithMatch) {
+          previousElement.childElementsWithMatch++;
+          previousElement.nodesYetTraversed--;
+        }      
+        else if (previousElement.nodesYetTraversed !== 0) {
+          previousElement.nodesYetTraversed--;
+        }               
+      }
+    }
   }
-  else {
-    return document.getElementById(nodeId); // TODO: test performance if you could extend a query selector here, alternately could use native getElementsByClassName if there is no id
+  var processedMatches = [];
+  for (var i =0; i <  matchedNodes.length; i++) {
+    if (matchedNodes[i].numMatches > matchedNodes[i].childElementsWithMatch) {
+      processedMatches.push(matchedNodes[i].node);
+    }
   }
+  return processedMatches; 
 }
 dojo.addOnLoad(function(){
   showzi.util.events.init();
