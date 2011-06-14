@@ -224,6 +224,7 @@ showzi.util.events = {
         center: new google.maps.LatLng(showzi.lat, showzi.lng)
       };
       showzi.map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+      showzi.map.hasFocus = true;
       showzi.util.eventful = new showzi.util.eventful();
       showzi.util.eventful.loadingToggler.hide();
       showzi.util.eventful.getCategories();
@@ -235,6 +236,7 @@ showzi.util.events = {
         dojo.byId('event_item_detail_frame').src = currentUrl.join('');
         dojo.byId('event_item_detail').style.display = 'block';
         dojo.byId('event_item_detail').style.zIndex = '1';
+        showzi.map.hasFocus = false;
       }
       dojo.byId('map_icon').addEventListener('click', function() {
         dojo.fadeOut({node:'event_item_detail',duration: 400}).play();
