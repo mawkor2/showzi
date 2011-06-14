@@ -251,19 +251,23 @@ showzi.util.events = {
       }
       showzi.processEventData(showzi.eventSearchData);
       dojo.byId('map_icon').addEventListener('click', function() {
-        dojo.fadeOut({node:'event_item_detail',duration: 400}).play();
         if (showzi.map.hasFocus) {
           var latLng = showzi.map.getCenter();
           showzi.util.eventful.searchByCoords(latLng.lat(), latLng.lng());        
         }
         else {
-          var eventMarkerIdx = showzi.map.selectedEvent;
-          showzi.map.setCenter(new google.maps.LatLng(showzi.eventMarkers[eventMarkerIdx].event.latitude, showzi.eventMarkers[eventMarkerIdx].event.longitude));
-          showzi.eventMarkers[eventMarkerIdx].setAnimation(google.maps.Animation.BOUNCE);
-          setTimeout('showzi.eventMarkers[' + eventMarkerIdx + '].setAnimation(null)', 1500);
+          var fadeAnim = dojo.fadeOut({node:'event_item_detail',duration: 400});
+          var handle = dojo.connect(fadeAnim, "onEnd", function() {
+            dojo.byId('event_item_detail').style.zIndex = '-1';
+            var eventMarkerIdx = showzi.map.selectedEvent;
+            showzi.map.setCenter(new google.maps.LatLng(showzi.eventMarkers[eventMarkerIdx].event.latitude, showzi.eventMarkers[eventMarkerIdx].event.longitude));
+            showzi.eventMarkers[eventMarkerIdx].setAnimation(google.maps.Animation.BOUNCE);
+            setTimeout('showzi.eventMarkers[' + eventMarkerIdx + '].setAnimation(null)', 1500);
+          });
+          fadeAnim.play();
         };
         showzi.map.hasFocus = true;
-      });
+      }, true);
       dojo.query('#event_list').delegate('.event_item_link', 'onclick', function(evt) {
         if (evt.target.className === 'target') {
           dojo.byId('event_item_detail').style.display = 'none';
@@ -294,11 +298,13 @@ showzi.util.events = {
           dojo.byId('event_item_detail').style.opacity = 0;
           dojo.byId('event_item_detail').style.display = 'block';
           dojo.byId('event_item_detail').style.zIndex = '1';
-          dojo.fadeIn({node:'event_item_detail',duration: 1200}).play();
+          var fadeAnim = dojo.fadeIn({node:'event_item_detail',duration: 1200});
+          fadeAnim.play();
         }
         else {
-          dojo.fx.chain([dojo.fadeOut({node:'event_item_detail',duration:500}),
-          dojo.fadeIn({node:'event_item_detail',duration: 1200})]).play();
+          var chainedAnim = dojo.fx.chain([dojo.fadeOut({node:'event_item_detail',duration:500}),
+          dojo.fadeIn({node:'event_item_detail',duration: 1200})]);
+          chainedAnim.play();
         };
         dojo.byId('event_item_detail_frame').src = this.href;
         showzi.map.hasFocus = false;
