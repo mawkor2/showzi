@@ -165,7 +165,7 @@ app.get('/concert_tour/', function(req, res){
     data.youtube.feed.width = '400px';
     var videoIds = [];
     for (var idx in data.youtube.feed.entry) {
-      if (idx !== 0) {
+      if (idx >= 1) {
         videoIds.push(data.youtube.feed.entry[idx]['media$group']['yt$videoid']['$t']);
       }
     };
