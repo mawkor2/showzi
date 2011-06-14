@@ -52,7 +52,6 @@ dojo.declare('showzi.util.eventful',
       var lat = lat || 34.07996230865873;
       var lng = lng || -118.33648681640625;
       this.searchParams.location = lat + "," + lng;
-      console.log('setting location to ' + this.searchParams.location); 
     },
     showLoading: function() {
         showzi.util.eventful.loadingToggler.show();
@@ -238,23 +237,33 @@ showzi.util.events = {
         dojo.byId('event_item_detail').style.zIndex = '1';
       }
       dojo.byId('map_icon').addEventListener('click', function() {
-        dojo.byId('event_item_detail').style.display = 'none';
-        var latLng = showzi.map.getCenter();
-        showzi.util.eventful.searchByCoords(latLng.lat(), latLng.lng());        
+        dojo.fadeOut({node:'event_item_detail',duration: 400}).play();
+        if (showzi.map.hasFocus) {
+          var latLng = showzi.map.getCenter();
+          showzi.util.eventful.searchByCoords(latLng.lat(), latLng.lng());        
+        }
+        else {
+          var eventMarkerIdx = showzi.map.selectedEvent;
+          showzi.map.setCenter(new google.maps.LatLng(showzi.eventMarkers[eventMarkerIdx].event.latitude, showzi.eventMarkers[eventMarkerIdx].event.longitude));
+          showzi.eventMarkers[eventMarkerIdx].setAnimation(google.maps.Animation.BOUNCE);
+          setTimeout('showzi.eventMarkers[' + eventMarkerIdx + '].setAnimation(null)', 1500);
+        };
+        showzi.map.hasFocus = true;
       });
       dojo.query('#event_list').delegate('.event_item_link', 'onclick', function(evt) {
         if (evt.target.className === 'target') {
           dojo.byId('event_item_detail').style.display = 'none';
           dojo.byId('event_item_detail').style.zIndex = '-1';
           var eventMarkerIdx = dojo.query(evt.target).parents('.event_item')[0].id.split('_')[2];
+          showzi.map.selectedEvent = eventMarkerIdx;
           showzi.map.setCenter(new google.maps.LatLng(showzi.eventMarkers[eventMarkerIdx].event.latitude, showzi.eventMarkers[eventMarkerIdx].event.longitude));
           showzi.eventMarkers[eventMarkerIdx].setAnimation(google.maps.Animation.BOUNCE);
           setTimeout('showzi.eventMarkers[' + eventMarkerIdx + '].setAnimation(null)', 1500);
           dojo.stopEvent(evt);
           return false;
         }
-        dojo.byId('event_item_detail').style.display = 'block';
-        dojo.byId('event_item_detail').style.zIndex = '1';
+        var eventMarkerIdx = this.firstChild.id.split('_')[2];
+        showzi.map.selectedEvent = eventMarkerIdx;
         var urlParts = this.href.split('/');
         var fraggedUrl = '';
         for (var idx = 0; idx < urlParts.length; idx++) {
@@ -267,7 +276,18 @@ showzi.util.events = {
           fraggedUrl += urlParts[idx];
         }
         location.href = fraggedUrl;
+        if (showzi.map.hasFocus) {
+          dojo.byId('event_item_detail').style.opacity = 0;
+          dojo.byId('event_item_detail').style.display = 'block';
+          dojo.byId('event_item_detail').style.zIndex = '1';
+          dojo.fadeIn({node:'event_item_detail',duration: 1200}).play();
+        }
+        else {
+          dojo.fx.chain([dojo.fadeOut({node:'event_item_detail',duration:500}),
+          dojo.fadeIn({node:'event_item_detail',duration: 1200})]).play();
+        };
         dojo.byId('event_item_detail_frame').src = this.href;
+        showzi.map.hasFocus = false;
         dojo.stopEvent(evt);
         return false;
       });
@@ -402,7 +422,6 @@ watching_count: null
  
 showzi.loadWidget = function(eventMarker) {
   var event = eventMarker.event;
-  console.log(event);
   dojo.fx.combine([
     dojox.fx.smoothScroll({
       node: dojo.byId(event.list_id),

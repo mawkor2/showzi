@@ -1,5 +1,5 @@
 !!! 5
-html(lang="en",style="overflow-x:hidden;")
+html(lang="en",style="overflow:hidden;")
   head
     title Tadoo - #{page_title}
     meta(name='viewport', content='initial-scale\=1.0, user-scalable\=no')
@@ -10,26 +10,53 @@ html(lang="en",style="overflow-x:hidden;")
       body { font-family: Tahoma; font-size: 13px; border:0; padding: 0; margin: 0;background-color: #111; color: snow;}
       #info_panel { overflow-y: hidden;
         min-height: 500px;}
-      #info_panel .module { max-height: 254px; overflow: auto; _display: inline; padding: 3px; }
-      .pane-hook {text-shadow: 1px 1px 1px #000;}
-      #info_panel div.youtube { width: 88%; text-align: center; float: left; height: 500px;}
-      #info_panel .eventful_detail { padding: 5px; width:88%; float: left;}
+      #info_panel .module { max-height: 200px;
+        overflow: auto;
+        _display: inline;
+        padding: 11px;
+        border-bottom: 1px dashed snow;
+        margin-bottom: 11px;
+        background-color: #2F4E6F; }
+      /* text-shadows */
+      .pane-hook, #info_panel .info {text-shadow: 1px 1px 1px #222;}
+      #info_panel div.youtube { width: 82%; text-align: center; float: left; height: 500px;}
+      #info_panel .eventful_detail { padding: 5px; width:82%; float: left;}
       #info_panel .ticket_image {position: absolute; left: 255px;}
       #info_panel .youtube_video { display:inline-block;width:399px;border-radius: 15px;  -moz-border-radius: 15px;text-align:left;height: 280px; padding: 4px; border: 8px solid snow; margin-top: 40px; }
       #info_panel .description {  margin: 5px; }
-      #info_panel .info { margin: 5px; padding: 3px 10px; text-shadow: -1px 1px #444;} 
+      #info_panel h1.info { margin: 5px; padding: 3px 10px; border: 0; } 
       #info_panel .eventful { float: left; } 
       #info_panel #panel2 { 
         border-left: none;
         border-right: none;}
-      #info_panel h1.info { background-color: #dceeee; border: 1px solid #010;  margin-top: 0px;
+      /* header background color and tabs  */
+      #info_panel .info, .pane-handle {
+        border-bottom: 2px solid #7DBD00;
+        background-color: #aceeee;
+      }
+      ::-webkit-scrollbar {
+        height: 10ex;
+        -webkit-border-radius: 1ex;
+      }
+      ::-webkit-scrollbar-thumb {
+        border-top: 1px solid white;
+        cursor: pointer;
+        background: #CCC -webkit-gradient(linear, 0% 0%, 0% 100%, from(#F0F0F0), to(#D2D2D2));
+        -webkit-border-radius: 1px;
+        -webkit-box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, .4);
+      }
+      #info_panel h1.info {   margin-top: 0px;
         -moz-border-radius-bottomright: 10px;
         border-bottom-right-radius: 15px 20px;
         -moz-border-radius-topright: 10px;
-        border-top-right-radius: 15px 20px;    
+        border-top-right-radius: 15px 20px; 
+        border: 2px solid #7DBD00;
       }
-
-      .s {  color: #9E4C4C; }
+      .right-radius {
+        -moz-border-radius: 0 9px 9px 0;
+        border-radius: 0 9px 9px 0;
+      }
+      .s {  color: #ff5b00; }
       .h {  color: #95d6a8; }
       .o {  color: #ffca08; }
       .w {  color: #ee6d2c; }
@@ -65,7 +92,7 @@ html(lang="en",style="overflow-x:hidden;")
       #info_panel .fb_p { position: relative;}
       #info_panel .fb_share_link { padding:0 0 0 20px; height:16px; background:url(http://static.ak.facebook.com/images/share/facebook_share_icon.gif?6:26981) no-repeat top left; color: snow;position: absolute; top: 10px; }      
       hr {background-color: snow; height: 2px; border: none; }
-      #info_panel img.eventful_main { height: 130px; width: 130px; border: 1px solid #ccc; float: left; margin: 0 7px 3px 0; }
+      #info_panel img.eventful_main { height: 130px; width: 130px; border: 1px solid #aceeee; float: left; margin: 0 7px 3px 0; }
       #info_panel h1 { font-size: 22px;} 
       #accordion-h h4 {
         margin: 0;
@@ -104,16 +131,12 @@ html(lang="en",style="overflow-x:hidden;")
       }
       .pane-handle {
         cursor: pointer;
-        background-color: #dceeee;
         float: left;
-        height: 500px;
-        width: 25px;
+        height: 563px;
+        width: 20px;
         text-decoration: none;
         position: relative;
-        border-top: 4px solid #dceeee;
         padding-top: 5px;
-        -moz-border-radius: 0 9px 9px 0;
-        border-radius: 0 9px 9px 0;
       }
       ul#accordion-h {
         padding: 0;
@@ -182,18 +205,26 @@ html(lang="en",style="overflow-x:hidden;")
           _paneHandleWidth = parseInt(_panes[0].children[0].children[0].offsetHeight);
           _containerWidth = _panes[0].parentNode.offsetWidth;
           var selectedIdx = getActiveIdx();
-          for (var idx in _panes) {
-            var currentPane = _panes[idx];            
+          for (var idx = 0; idx < _panes.length; idx++) {
+            var currentPane = _panes[idx];
+            if (idx === selectedIdx) {
+              dojo.addClass(currentPane.firstChild, "right-radius");
+            };
             if (idx > selectedIdx) {
-              dojo.addClass(currentPane.firstChild, "left-radius");
+              if (idx - 1 === selectedIdx) {
+                dojo.addClass(currentPane.firstChild, "left-radius");
+              }
               dojo.style(currentPane, "left", ((_containerWidth - ((_panes.length - idx) * _paneHandleWidth)) - dojo.style(currentPane, "marginLeft")) + 'px');
-            }                
-          }
+            };  
+          };
         };
 
         var getActiveIdx = function() {
           var activeLi = dojo.query('li.active', _containerId);
           return activeLi[0].id.split('-')[1] - 1;
+        };
+        var getPane = function(idx) {
+          return dojo.byId('pane-' + (idx + 1));
         };
         var setActiveIdx = function(idx) {
           _activeIdx = idx;
@@ -204,12 +235,21 @@ html(lang="en",style="overflow-x:hidden;")
           if (dojo.hasClass(e.target, "pane-hook")) {
             var activeIdx = getActiveIdx();
             var clickedIdx = e.target.parentNode.parentNode.id.split('-')[1] - 1;
-            if (clickedIdx > activeIdx) {
+            if (clickedIdx === activeIdx) {
+              return;
+            };
+            dojo.removeClass(getPane(activeIdx).firstChild, "right-radius");
+            if (getPane(activeIdx + 1)) {
+              dojo.removeClass(getPane(activeIdx + 1).firstChild, "left-radius");
+            }
+            dojo.addClass(getPane(clickedIdx).firstChild, "right-radius");
+            if (clickedIdx !== _panes.length - 1) {
+              dojo.addClass(getPane(clickedIdx + 1).firstChild, "left-radius");
+            }
+            if (clickedIdx > activeIdx) {              
               var aAnim = [];
-              for (var idx = activeIdx + 1; idx < clickedIdx + 1; idx++) {
-                var paneId = 'pane-' + (idx + 1);
-                var paneNode = dojo.byId(paneId);
-                dojo.removeClass(paneNode.firstChild, "left-radius");
+              for (var idx = activeIdx + 1; idx <= clickedIdx; idx++) {
+                var paneNode = getPane(idx);
                 aAnim.push(dojo.fx.slideTo({
                   node: paneNode,
                   left: 0
@@ -223,7 +263,6 @@ html(lang="en",style="overflow-x:hidden;")
               for (var idx = clickedIdx + 2; idx < _panes.length + 1; idx++) {                                                  
                 var paneId = 'pane-' + idx;
                 var paneNode = dojo.byId(paneId);
-                dojo.addClass(paneNode.firstChild, "left-radius");
                 var targetLeft = (_containerWidth - ((_panes.length - idx + 1) * _paneHandleWidth)) - dojo.style(paneNode, "marginLeft");
                 aAnim.push(dojo.fx.slideTo({
                   node: paneNode,

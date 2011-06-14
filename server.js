@@ -56,7 +56,6 @@ app.get('/', function(req, res){
   oQuery.location = lat + "," + lng;
   var sQuery = showzi.buildQuery(oQuery);
   sQuery = sQuery.substr(1, sQuery.length - 1);
-  console.log(sQuery);
   var config = {
     eventful: {
       request: {
@@ -73,12 +72,9 @@ app.get('/', function(req, res){
   var date_1 = new Date();
   var jj = remix.remix(config);
   var date_2 = new Date();
-  console.log('remix: ' + (date_2 - date_1) + 'ms');
   jj.wire();
   var date_3 = new Date();
-  console.log('wire: ' + (date_3 - date_2) + 'ms');
   jj.events.on('complete', function(data) {
-    console.log(lat);
     res.render('index', {
       pageTitle: 'Tadoo - Find events in your area',
       sEvents: JSON.stringify(data.eventful),
@@ -132,7 +128,6 @@ app.get('/concert_tour/', function(req, res){
             alt: 'json',
             q: ''                        
           };
-          console.log('hello mr');
           if (data.performers && data.performers.performer && data.performers.performer.name) {
             query.q = '"' + data.performers.performer.name + '"';
           }
@@ -157,10 +152,8 @@ app.get('/concert_tour/', function(req, res){
             var tokens = title.toLowerCase().tokenize();
             var tokensScrubbed = scrub(tokens).stripPresenters().stripDates().stripLive().stripSoldOut().stripPlays();
             query.q = tokensScrubbed.tokens.join(',');
-            console.log(query.q);         
           };
           req.options.query = showzi.buildQuery(query);
-          console.log(req.options.query);  
         }
       }
     }
@@ -168,7 +161,6 @@ app.get('/concert_tour/', function(req, res){
   var jj = remix.remix(config);
   jj.wire();
   jj.events.on('complete', function(data) {
-    console.log('complete?');
     data.youtube.feed.height = '280px';
     data.youtube.feed.width = '400px';
     var videoIds = [];
@@ -178,7 +170,6 @@ app.get('/concert_tour/', function(req, res){
       }
     };
     var tagRegX = /<[^>]*>/g;
-    console.log(data.eventful);
     if (data.eventful.description) {
       data.eventful.description = data.eventful.description.replace(/<[^>]*>?/g, '');
     }
@@ -239,7 +230,6 @@ app.get('/concert_tour/', function(req, res){
       event_data: [data]
     });
   });
-  console.log('go?');
   jj.go();
 });
 app.get('/widget/js/*.js', function(req, res){

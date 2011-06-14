@@ -12,11 +12,10 @@ html(lang="en")
           }  
         
       ::-webkit-scrollbar-thumb {  
-          border-top: 1px solid #fff;
-          cursor: nw-resize;  
-          background: #ccc -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgb(240, 240, 240)), to(rgb(210, 210, 210)));  
-             -webkit-border-radius: 1ex;  
-            -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, .4);  
+          cursor: pointer;
+          background: #CCC -webkit-gradient(linear, 0% 0%, 0% 100%, from(#F0F0F0), to(#D2D2D2));
+          -webkit-border-radius: 1px;
+          -webkit-box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, .4); 
       }      
       a { text-decoration: none; color: #000000;}
       \#right_panel { height: 100%; float: left; width: 65%; position: relative; background-color: #ccc}
@@ -28,7 +27,7 @@ html(lang="en")
           border-color: #ccc;
           background-color: #fff;
       }  
-      \#search_shim {  width:50%; float: left; background-color: #555; }
+      \#search_shim {  width:50%; float: left; background-color: #888; }
       \#search_shim input {
           height: 15px;
           border: none;
@@ -49,7 +48,7 @@ html(lang="en")
       .nihilo #control-container .dijitButtonNode {
         color: #fff;
         background: none;
-        background-color: #555;
+        background-color: #888;
       }
       \#category-list .dijitDropDownButton {  
           -moz-border-radius-bottomright: 10px;
@@ -77,8 +76,8 @@ html(lang="en")
       .bottom { position: absolute; top: 605px; text-align: center; width: 200px;}
       \#control-container { width: 35%; height: 100%; float: left; position:relative; }
       \div #category-list { z-index: 1; width: 50%; float: left; height: 21px; }
-      #category-dropdown { height: 21px; position: relative; text-align: left; padding-left: 14px; border-right: 1px #555;}
-      \#logo { letter-spacing: 2px; color: #000; width: 100%; text-align: center; font-family: "bdbm", impact; position: relative; background-color: #555;}
+      #category-dropdown { height: 21px; position: relative; text-align: left; padding-left: 14px; border-right: 1px #888;}
+      \#logo { letter-spacing: 2px; color: #000; width: 100%; text-align: center; font-family: "bdbm", impact; position: relative; background-color: #888;}
       @font-face {
         font-family: "ppg";
         src: url(fonts/phorfeir.ttf) format("truetype");
@@ -94,7 +93,7 @@ html(lang="en")
       \#logoContainer {text-align: left;
           -moz-border-radius-topleft: 10px;
           border-top-left-radius: 15px 20px;
-          background-color: #dee;
+          background-color: #aceeee;
           height: 32px;
           text-shadow: 2px 2px 2px #000;
           border-bottom: 1px solid #ccc;
@@ -127,13 +126,13 @@ html(lang="en")
       .event_item .stop_time { }
       .event_item .target { margin-right: 5px; } 
       .event_item .image_title {  position: relative;min-height: 50px; 
-        box-shadow: 2px 2px 2px #555;
-        border: 1px solid #EEDE1A;
+        box-shadow: 2px 2px 2px #888;
+        border: 1px solid #DCF600;
         padding: 5px;
-        background-color: #111;
+        background-color: #2F4E6F;
         margin-bottom: 7px;
         color: snow;}
-      \#event_list { height: 545px; overflow-y: scroll; border-top: 1px solid #ccc;  border-bottom: 1px solid #ccc; width: 100%; background-color: #dee;}
+      \#event_list { height: 545px; overflow-y: scroll; border-top: 1px solid #ccc;  border-bottom: 1px solid #ccc; width: 100%; background-color: #ACEEEE;}
       \#downloadProgress { width: 100%; border: none; border-top: 1px solid #ccc; height: 9px;}
     script(src='http://ajax.googleapis.com/ajax/libs/dojo/1.6/dojo/dojo.xd.js',djConfig='parseOnLoad: true')
     script
