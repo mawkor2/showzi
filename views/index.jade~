@@ -58,7 +58,6 @@ html(lang="en")
       }
       #profile.ninja {
         font-family: "lastninja";
-        font-size: 13px;
       }
       #profile .avatar {
         background-repeat: no-repeat;

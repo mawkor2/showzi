@@ -1,35 +1,82 @@
 !!! 5
-html(lang="en",style="overflow-x:hidden;")
+html(lang="en",style="overflow:hidden;")
   head
     title Tadoo - #{page_title}
     meta(name='viewport', content='initial-scale\=1.0, user-scalable\=no')
     meta(name='description', content='Event finder for local events with map and directions - ' + page_title)
     meta(name='keywords', content='events,concerts,local,map,directions,tickets,videos,mp3s,' + page_keywords)
+    script 
+      var switchTo5x=true;
+    script(src="http://w.sharethis.com/button/buttons.js")         
+    script 
+      stLight.options({publisher:'9e989c9b-76f8-4a5e-aee8-8d865f2839c0'});
     style
+      img { border: none; }
+      .sharer { position: absolute; right: 0; z-index: 100; padding-top: 8px; padding-right: 4px;} 
       html {border: 0; padding: 0; margin: 0;}
-      body { font-family: Tahoma; font-size: 13px; border:0; padding: 0; margin: 0;background-color: #111; color: snow;}
-      #info_panel .module { overflow: auto; _display: inline; padding: 3px; }
-
-      #info_panel div.youtube {float: left; margin-left:30px; border: 8px dotted snow; }
-      #info_panel .eventful_detail { padding: 5px; max-width: 240px; width: auto;}
-      #info_panel .ticket_image {position: absolute; right: -7px;}
-      #info_panel .youtube_video {text-align:left;height: 280px; padding: 5px; }
-      #info_panel .description {  margin: 5px; }
-      #info_panel .info { margin: 5px; padding: 3px 10px; text-shadow: -1px 1px #444;} 
+      body { font-family: Tahoma; font-size: 13px; border:0; padding: 0; margin: 0;background-color: #313131; color: #ccc;}
+      #info_panel { overflow-y: hidden;
+        min-height: 500px;
+        margin-top:10px;}
+      #info_panel .module { max-height: 200px;
+        overflow: auto;
+        _display: inline;
+        padding: 11px;
+        border-bottom: 1px dashed snow;
+        background-color: #313131; }
+      /* text-shadows */
+      .pane-hook, #info_panel .info {text-shadow: 1px 1px 1px #222;}
+      #info_panel div.youtube { width: 82%; text-align: center; float: left; height: 500px;}
+      #info_panel .eventful_detail {padding: 35px;
+        width: 68%;
+        float: left;
+        color: white;}
+      #info_panel .ticket_image {position: absolute; left: 255px;}
+      #info_panel .youtube_video { display:inline-block;width:399px;text-align:left;height: 280px; padding: 4px; border: 4px solid #ccc; margin-top: 60px; }
+      #info_panel .description {  margin: 5px; color: #fff; }
+      #info_panel h1.info { margin: 5px; padding: 3px 10px; border: 0; } 
       #info_panel .eventful { float: left; } 
       #info_panel #panel2 { 
-        padding-top: 10px;
-        padding-bottom: 10px;
-        border: 3px solid #CCC;
         border-left: none;
-        border-right: none;
-        overflow: auto;width:150%;}
-      #info_panel h1.info { background-color: #dee; border: 1px solid #010; color: #FFD012; margin-top: 0px;
-        -moz-border-radius-bottomright: 10px;
-        border-bottom-right-radius: 15px 20px;
-        -moz-border-radius-topright: 10px;
-        border-top-right-radius: 15px 20px;    
+        border-right: none;}
+      /* header background color and tabs  */
+
+      #info_panel .info .pane * {
+        color: #fff;
       }
+      #info_panel .info, .pane-handle {
+        border-bottom: 2px solid #7DBD00;
+        background-color: #313131;
+      }
+      ::-webkit-scrollbar {
+        height: 10ex;
+        -webkit-border-radius: 1ex;
+      }
+      ::-webkit-scrollbar-thumb {
+        border-top: 1px solid white;
+        cursor: pointer;
+        background: #CCC -webkit-gradient(linear, 0% 0%, 0% 100%, from(#F0F0F0), to(#D2D2D2));
+        -webkit-border-radius: 1px;
+        -webkit-box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, .4);
+      }
+      #info_panel h1.info {   margin-top: 0px;
+        -moz-border-radius-bottomright: 5px;
+        border-bottom-right-radius: 5px 5px;
+        -moz-border-radius-topright: 5px;
+        border-top-right-radius: 5px 5px; 
+        border: 2px solid #000;
+        background-color: #222;
+      }
+      .right-radius {
+        -moz-border-radius: 0 4px 4px 0;
+        border-radius: 0 4px 4px 0;
+      }
+      .s {  color: #ccc; }
+      .h {  color: #95d6a8; }
+      .o {  color: #ffca08; }
+      .w {  color: #ee6d2c; }
+      .z {  color: #cd0827; }
+      .i {  color: #9E4C4C;}
       h4 {
         -moz-transform-origin: top left;
         -webkit-transform-origin: top left;
@@ -41,13 +88,103 @@ html(lang="en",style="overflow-x:hidden;")
         padding: 0;
         position: relative;
         -webkit-transform-origin-x: 0%;
-        -webkit-transform-origin-y: 0%;        
-      }      
-      #info_panel .fb_p { position: relative;}
-      #info_panel .fb_share_link { padding:0 0 0 20px; height:16px; background:url(http://static.ak.facebook.com/images/share/facebook_share_icon.gif?6:26981) no-repeat top left; color: snow;position: absolute; top: 10px; }      
+        -webkit-transform-origin-y: 0%;
+        -moz-transform: rotate(-90deg);
+        -webkit-transform: rotate(-90deg);
+        -o-transform: rotate(-90deg);
+        filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+        font-size: 15px;
+        font-weight: bold;
+        text-align: right;
+        line-height: 20px;
+        display: block;
+        font-family: monospace;
+      }
+      #info_panel .left-radius {
+        border-radius: 4px 0 0 4px;
+        -moz-border-radius: 4px 0 0 4px; 
+      }
       hr {background-color: snow; height: 2px; border: none; }
-      #info_panel img.eventful_main { height: 130px; width: 130px; border: 1px solid #ccc; float: left; margin: 0 7px 3px 0; }
+      #info_panel img.eventful_main { height: 130px; width: 130px; border: 1px solid #aceeee; float: left; margin: 0 7px 3px 0; }
       #info_panel h1 { font-size: 22px;} 
+      #accordion-h h4 {
+        margin: 0;
+        -moz-transform-origin: top left;
+        -webkit-transform-origin: top left;
+        -o-transform-origin: top left;
+        width: 300px;
+        top: 300px;
+        position: relative;
+        -moz-transform: rotate(-90deg);
+        -webkit-transform: rotate(-90deg);
+        -o-transform: rotate(-90deg);
+        filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+        font-size: 15px;
+        font-weight: bold;
+        text-align: right;
+        display: block;
+        font-size: 20px;
+      }
+      #accordion-h {
+        position: relative;
+        height: 300px;
+        padding: 0;
+        margin: 0;
+        overflow-y: hidden;
+        min-height: 600px;
+        background-color: #111111;
+      }
+      .pane {
+        position: absolute;
+        height: 500px;
+        width: 100%;
+        margin: 0;    
+        padding: 0;
+        background-color: #111111;
+      }
+      .pane-handle {
+        cursor: pointer;
+        float: left;
+        height: 563px;
+        width: 20px;
+        text-decoration: none;
+        position: relative;
+        padding-top: 5px;
+      }
+      ul#accordion-h {
+        padding: 0;
+        overflow: hidden;
+        list-style-type: none;
+      }
+      ul#accordion-h {
+        position: relative;
+        top: 0;
+        left: 0;
+      }
+      #pane-1 {
+        z-index: 1;
+      }
+      #pane-2 {
+        z-index: 2;
+        margin-left: 20px;
+      }
+      #pane-3 {
+        z-index: 3;
+        margin-left: 40px;
+      }
+      #pane-4 {
+        z-index: 4;
+        margin-left: 60px;
+      }
+      #pane-5 {
+        z-index: 5;
+        margin-left: 80px;
+      }
+      #pane-6 {
+        z-index: 6;
+        margin-left: 100px;
+      }   
+    script(src="http://ajax.googleapis.com/ajax/libs/dojo/1.6/dojo/dojo.xd.js", djConfig="parseOnLoad: true")    
     script
       if (top == self) {
         var urlParts = location.href.split('/');
@@ -63,18 +200,140 @@ html(lang="en",style="overflow-x:hidden;")
         }
         location.href = fraggedUrl;
       }
-      function fbs_click() {
-        var u = location.href;
-        var t = document.title;
-        window.open('http://www.facebook.com/sharer.php?u='+encodeURIComponent(u)+'&t='+encodeURIComponent(t),'sharer','toolbar=0,status=0,width=626,height=436');
-        return false;
-      }   
+      dojo.require("dojo.fx");
+      var AccordionH = function() {
+        var _panes = [];
+        var _paneHandleWidth = 0;
+        var _containerWidth = 0;
+        var _containerId = 'accordion-h';
+        var _activeIdx = 0;
+        var loadPanes = function() {
+          _panes = dojo.query('li.pane');
+          _paneHandleWidth = parseInt(_panes[0].children[0].children[0].offsetHeight);
+          _containerWidth = _panes[0].parentNode.offsetWidth;
+          var selectedIdx = getActiveIdx();
+          for (var idx = 0; idx < _panes.length; idx++) {
+            var currentPane = _panes[idx];
+            if (idx === selectedIdx) {
+              dojo.addClass(currentPane.firstChild, "right-radius");
+            };
+            if (idx > selectedIdx) {
+              currentPane.style.top = '47px';
+              if (idx - 1 === selectedIdx) {
+                dojo.addClass(currentPane.firstChild, "left-radius");
+              }
+              dojo.style(currentPane, "left", ((_containerWidth - ((_panes.length - idx) * _paneHandleWidth)) - dojo.style(currentPane, "marginLeft")) + 'px');
+            };  
+          };
+        };
+
+        var getActiveIdx = function() {
+          var activeLi = dojo.query('li.active', _containerId);
+          return activeLi[0].id.split('-')[1] - 1;
+        };
+        var getPane = function(idx) {
+          return dojo.byId('pane-' + (idx + 1));
+        };
+        var setActiveIdx = function(idx) {
+          _activeIdx = idx;
+          dojo.removeClass(dojo.query('li.active', _containerId)[0], 'active');
+          dojo.addClass(dojo.byId('pane-' + (idx + 1)), 'active');
+        };
+        var handlePaneClick = function(e) {
+          if (dojo.hasClass(e.target, "pane-hook")) {
+            var activeIdx = getActiveIdx();
+            var clickedIdx = e.target.parentNode.parentNode.id.split('-')[1] - 1;
+            if (clickedIdx === activeIdx) {
+              return;
+            };
+            dojo.removeClass(getPane(activeIdx).firstChild, "right-radius");
+            if (getPane(activeIdx + 1)) {
+              dojo.removeClass(getPane(activeIdx + 1).firstChild, "left-radius");
+            }
+            dojo.addClass(getPane(clickedIdx).firstChild, "right-radius");
+            if (clickedIdx !== _panes.length - 1) {
+              dojo.addClass(getPane(clickedIdx + 1).firstChild, "left-radius");
+            }
+            if (clickedIdx > activeIdx) {              
+              var aAnim = [];
+              for (var idx = activeIdx + 1; idx <= clickedIdx; idx++) {
+                var paneNode = getPane(idx);
+                aAnim.push(dojo.fx.slideTo({
+                  node: paneNode,
+                  left: 0,
+                  top: 10
+                }));
+              };
+              var anim = dojo.fx.combine(aAnim);
+              anim.play();
+            }
+            else if (clickedIdx < activeIdx) {
+              var aAnim = [];
+              for (var idx = clickedIdx + 2; idx < _panes.length + 1; idx++) {                                                  
+                var paneId = 'pane-' + idx;
+                var paneNode = dojo.byId(paneId);
+                var targetLeft = (_containerWidth - ((_panes.length - idx + 1) * _paneHandleWidth)) - dojo.style(paneNode, "marginLeft");
+                aAnim.push(dojo.fx.slideTo({
+                  node: paneNode,
+                  left: targetLeft,
+                  top: 47
+                }));
+              }
+              var anim = dojo.fx.combine(aAnim);
+              anim.play();
+            }
+            setActiveIdx(clickedIdx);
+          }          
+        };  
+        return {
+          init: function() {
+            loadPanes();
+            dojo.connect(dojo.byId('accordion-h'), 'onclick', handlePaneClick);
+            dojo.connect(window, 'onresize', loadPanes);
+          },
+
+          // temporary public access
+          panes: _panes
+        };            
+      }(); 
+      dojo.addOnLoad(function() {
+          AccordionH.init();
+      });
   body
     div#info_panel
       div.module
         != partial('_mod_eventful_head', event_data[0].eventful)
       div#panel2
-        div.panel2.eventful_detail
-          != partial('_mod_eventful_detail', event_data[0].eventful)
-        div.panel2.module.youtube
-          != partial('_mod_youtube', event_data[0].youtube)
+        div.sharer
+          span(class='st_twitter_large')
+          span(class='st_facebook_large')
+          span(class='st_yahoo_large')
+          span(class='st_gbuzz_large')
+          span(class='st_email_large')
+          span(class='st_sharethis_large')
+        ul#accordion-h
+          div#info_panel
+            li(id="pane-1", class="pane")
+              a.pane-handle
+                h4(class="pane-hook s") Tickets & Event Info
+              != partial('_mod_eventful_detail', event_data[0].eventful)
+            li(id="pane-2", class="pane active")
+              a.pane-handle
+                h4(class="pane-hook s") Videos
+              div.youtube
+                != partial('_mod_youtube', event_data[0].youtube)
+            li(id="pane-3", class="pane")
+              a.pane-handle
+                h4(class="pane-hook s") flickr
+              div(style="height: 500px;width:95%;background-color: #111;") 
+                h5(style="margin-left:40px;") Coming Soon!
+            li(id="pane-4", class="pane")
+              a.pane-handle
+                h4(class="pane-hook s") Wikipedia
+              div(style="height: 500px;width:95%;background-color: #111;") 
+                h5(style="margin-left:40px;") Coming Soon!
+            li(id="pane-5", class="pane")
+              a.pane-handle
+                h4(class="pane-hook s") Super Secret Cool Tab
+              div(style="height: 500px;width:95%;background-color: #111;") 
+                h5(style="margin-left:40px;") Coming Soon!

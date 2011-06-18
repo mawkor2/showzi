@@ -192,7 +192,7 @@ app.get('/concert_tour/', function(req, res){
     }
     if (!data.eventful.images.image.medium) {
       data.eventful.images.image.medium = {
-        url: "/images/pirate_r.png"
+        url: "/images/no_image.jpg"
       }
     }
     if (!data.eventful.start_time) {
