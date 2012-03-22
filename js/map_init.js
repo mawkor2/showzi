@@ -1,4 +1,4 @@
-// TODO: fix junky google code example copy paste
+// TODO: remove gears, as it is no longer supported
 
 var initialLocation;
 var siberia = new google.maps.LatLng(60, 105);
