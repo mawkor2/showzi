@@ -1,4 +1,4 @@
-// TODO: remove gears, as it is no longer supported
+// TODO: remove gears, as it is no longer supported, consider using modernizr, ?serverside modernizr?
 
 var initialLocation;
 var siberia = new google.maps.LatLng(60, 105);
